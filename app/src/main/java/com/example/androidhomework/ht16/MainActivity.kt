@@ -5,8 +5,9 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.androidhomework.ht16.FirstNoteActivity
+import com.example.androidhomework.ht16.SecondNoteActivity
+import com.example.androidhomework.ht16.ThirdNodeActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,9 +15,9 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        val intent1 = Intent(this@MainActivity,FirstNoteActivity::class.java)
-        val intent2 = Intent(this@MainActivity,SecondNoteActivity::class.java)
-        val intent3 = Intent(this@MainActivity,ThirdNodeActivity::class.java)
+        val intent1 = Intent(this@MainActivity, FirstNoteActivity::class.java)
+        val intent2 = Intent(this@MainActivity, SecondNoteActivity::class.java)
+        val intent3 = Intent(this@MainActivity, ThirdNodeActivity::class.java)
 
         val button1 = findViewById<Button>(R.id.button1)
         val button2 = findViewById<Button>(R.id.button2)
