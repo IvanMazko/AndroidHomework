@@ -63,7 +63,7 @@
         android:background="@drawable/edit_view_background"/>
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tvTextToTranslate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/myText"
