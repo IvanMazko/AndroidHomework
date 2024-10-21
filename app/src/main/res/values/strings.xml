@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">AndroidHomework</string>
+    <string name="prompt_email">Введите ваш Email</string>
+    <string name="prompt_password">Введите ваш пароль</string>
+    <string name="action_sign_in">Войти</string>
+    <string name="action_sign_in_short">Вход</string>
+    <string name="myText">Этот текст должен быть переведён</string>
 </resources>
