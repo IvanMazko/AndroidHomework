@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.example.androidhomework.MainActivity
 import com.example.androidhomework.R
 
 class SplashActivity : AppCompatActivity() {

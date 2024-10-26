@@ -1,10 +1,11 @@
-package com.example.androidhomework
+package com.example.androidhomework.ht16
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.example.androidhomework.R
 import com.example.androidhomework.ht16.FirstNoteActivity
 import com.example.androidhomework.ht16.SecondNoteActivity
 import com.example.androidhomework.ht16.ThirdNodeActivity

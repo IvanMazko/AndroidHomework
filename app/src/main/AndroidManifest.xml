@@ -22,7 +22,7 @@
             android:name=".ht16.FirstNoteActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ht16.MainActivity"
             android:exported="false"
             android:label="Home" />
         <activity
