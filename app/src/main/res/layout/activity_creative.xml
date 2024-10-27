@@ -55,7 +55,7 @@
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:layout_marginBottom="48dp"
-        android:text="Enter login"
+        android:hint="Enter login"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.843"
