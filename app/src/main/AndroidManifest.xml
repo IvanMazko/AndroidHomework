@@ -6,12 +6,15 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/baseline_note_add_24"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/baseline_note_add_24"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidHomework"
         tools:targetApi="31">
+        <activity
+            android:name=".ht18.RegistrationActivity"
+            android:exported="false" />
         <activity
             android:name=".ht16.ThirdNodeActivity"
             android:exported="false" />
@@ -27,8 +30,7 @@
             android:label="Home" />
         <activity
             android:name=".ht16.SplashActivity"
-            android:exported="true" >
-
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
