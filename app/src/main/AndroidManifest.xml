@@ -25,9 +25,12 @@
             android:name=".ht16.FirstNoteActivity"
             android:exported="false" />
         <activity
-            android:name=".ht16.MainActivity"
+            android:name=".ht19.MainActivity"
             android:exported="false"
             android:label="Home" />
+        <activity
+            android:name=".ht19.NewNoteActivity"
+            android:exported="false" />
         <activity
             android:name=".ht16.SplashActivity"
             android:exported="true">

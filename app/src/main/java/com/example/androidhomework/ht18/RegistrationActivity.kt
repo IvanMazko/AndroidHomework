@@ -7,10 +7,8 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.androidhomework.R
-import com.example.androidhomework.ht16.MainActivity
+import com.example.androidhomework.ht19.MainActivity
 
 class RegistrationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,6 +23,8 @@ class RegistrationActivity : AppCompatActivity() {
         password = findViewById(R.id.password_et)
 
         val button = findViewById<Button>(R.id.sign_up_btn)
+
+
 
 
         button.setOnClickListener {
