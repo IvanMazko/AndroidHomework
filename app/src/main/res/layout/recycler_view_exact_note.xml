@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rven_root_cl"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-<androidx.appcompat.widget.AppCompatTextView
-    android:id="@+id/rven_header_actv"
-    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    android:layout_marginVertical="12dp"
-    android:paddingHorizontal="20dp"
-    tools:text="Header"/>
+    android:background="@color/colorPrimaryDark"
+    android:layout_marginBottom="5dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/rven_header_actv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginVertical="12dp"
+        android:paddingHorizontal="20dp"
+        android:textSize="18dp"
+        android:textColor="@color/white"
+        tools:text="Header"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/rven_message_actv"
@@ -24,17 +30,23 @@
         app:layout_constraintBottom_toBottomOf="@id/rven_header_actv"
         app:layout_constraintTop_toTopOf="@id/rven_header_actv"
         app:layout_constraintStart_toEndOf="@id/rven_header_actv"
+
         android:layout_marginVertical="12dp"
         android:paddingHorizontal="20dp"
+        android:textSize="18dp"
+        android:textColor="@color/white"
         tools:text="Message"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/rven_time_actv"
+        android:id="@+id/rven_date_actv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@id/rven_header_actv"
         app:layout_constraintTop_toTopOf="@id/rven_header_actv"
-        app:layout_constraintStart_toEndOf="@id/rven_message_actv"
-        tools:text="Time"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
+        android:textSize="18dp"
+        android:textColor="@color/white"
+        tools:text="Date"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

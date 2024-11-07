@@ -6,13 +6,17 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidhomework.R
+import kotlinx.coroutines.processNextEventInCurrentThread
 
-class Adapter(val list: List<Note>) : RecyclerView.Adapter<Adapter.ViewHolder>() {
+class Adapter(
+    val list: List<Note>,
+    val callback: (view : View, position : Int) -> Unit
+) : RecyclerView.Adapter<Adapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val header = itemView.findViewById<AppCompatTextView>(R.id.rven_header_actv)
         val message = itemView.findViewById<AppCompatTextView>(R.id.rven_message_actv)
-        val time = itemView.findViewById<AppCompatTextView>(R.id.rven_time_actv)
+        val date = itemView.findViewById<AppCompatTextView>(R.id.rven_date_actv)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -23,9 +27,12 @@ class Adapter(val list: List<Note>) : RecyclerView.Adapter<Adapter.ViewHolder>()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.itemView.setOnClickListener{
+            callback.invoke(holder.itemView, position)
+        }
         holder.header.text = list[position].header
         holder.message.text = list[position].message
-        holder.time.text = list[position].time
+        holder.date.text = list[position].date
     }
 
     override fun getItemCount(): Int = list.size

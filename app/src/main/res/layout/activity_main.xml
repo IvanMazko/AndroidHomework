@@ -8,7 +8,7 @@
     tools:context=".ht19.MainActivity" >
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/am_userName_tv"
+        android:id="@+id/am_userName_actv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -34,13 +34,13 @@
         app:layout_constraintHorizontal_bias="0.5"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/am_exit_btn"
+        android:id="@+id/am_signOut_btn"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="Exit"
+        android:text="Sign out"
         android:textSize="20dp"
         app:layout_constraintVertical_bias="0.015"
         android:layout_marginEnd="20dp" />
@@ -49,12 +49,14 @@
         android:id="@+id/am_notes_rv"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="65dp"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="65dp"/>
+        app:layout_constraintVertical_bias="1.0" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/am_addNewNote_acb"

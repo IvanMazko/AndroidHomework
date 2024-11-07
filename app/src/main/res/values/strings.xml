@@ -6,4 +6,5 @@
     <string name="action_sign_in">Войти</string>
     <string name="action_sign_in_short">Вход</string>
     <string name="myText">Этот текст должен быть переведён</string>
+
 </resources>

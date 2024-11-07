@@ -1,10 +1,15 @@
 package com.example.androidhomework.ht19
 
-import androidx.appcompat.widget.AppCompatTextView
+import android.os.Parcel
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-data class Note (
+@Parcelize
+class Note (
     var header : String,
     val message : String,
-    val time : String,
-)
+    val date : String,
+) : Parcelable
+
+
 

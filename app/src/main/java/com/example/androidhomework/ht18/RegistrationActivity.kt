@@ -24,9 +24,6 @@ class RegistrationActivity : AppCompatActivity() {
 
         val button = findViewById<Button>(R.id.sign_up_btn)
 
-
-
-
         button.setOnClickListener {
             if (login.text.toString().isEmpty() || password.text.toString().isEmpty()) {
                 Toast.makeText(this, "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show()
@@ -34,11 +31,9 @@ class RegistrationActivity : AppCompatActivity() {
                 val intent = Intent(this, MainActivity::class.java).also {
                     it.putExtra("username", login.text.toString())
                     startActivity(it)
+                    finish()
                 }
-
             }
         }
-
-
     }
 }
