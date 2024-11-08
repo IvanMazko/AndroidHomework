@@ -23,7 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
-    private val listOfNotes: ArrayList<Note> = ArrayList()
+    private val listOfNotes: ArrayList<Custom.Note> = ArrayList()
     private lateinit var adapter: Adapter
 
     companion object {
@@ -48,13 +48,17 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
 
-        val addNewNoteBtn = findViewById<AppCompatButton>(R.id.am_addNewNote_acb)
+        val addNewNoteBtn = findViewById<AppCompatButton>(R.id.am_newNote_acb)
         addNewNoteBtn.setOnClickListener {
             val intent = Intent(this, NewNoteActivity::class.java)
             intent.putParcelableArrayListExtra("notesList", listOfNotes)
             startActivityForResult(intent, REQUEST_CODE_NEW_NOTE)
         }
 
+        val addIconBtn = findViewById<AppCompatButton>(R.id.am_icon_acb)
+        addIconBtn.setOnClickListener {
+
+        }
         val signOutBtn = findViewById<AppCompatButton>(R.id.am_signOut_btn)
         signOutBtn.setOnClickListener {
             val intent = Intent(this, RegistrationActivity::class.java)
@@ -78,6 +82,17 @@ class MainActivity : AppCompatActivity() {
                     }
                     true
                 }
+                R.id.menu_share -> {
+                    val message = "Header : " + listOfNotes[position].header +
+                            "\nMessage : " + listOfNotes[position].message +
+                            "\nDate : " + listOfNotes[position].date
+                    val intent = Intent(Intent.ACTION_SEND)
+                    intent.setType("text/plain")
+                    intent.putExtra(Intent.EXTRA_TEXT, message)
+                    val chosenIntent = Intent.createChooser(intent, "Share with:")
+                    startActivity(chosenIntent)
+                    true
+                }
                 else -> false
             }
         }
@@ -86,7 +101,7 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_NEW_NOTE && resultCode == Activity.RESULT_OK) {
-            val updatedNotesList = data?.getParcelableArrayListExtra<Note>("updatedNotesList")
+            val updatedNotesList = data?.getParcelableArrayListExtra<Custom.Note>("updatedNotesList")
             if (updatedNotesList != null) {
                 listOfNotes.clear()
                 listOfNotes.addAll(updatedNotesList)

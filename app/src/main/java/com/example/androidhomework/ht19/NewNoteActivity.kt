@@ -25,30 +25,28 @@ class NewNoteActivity : AppCompatActivity() {
         setContentView(R.layout.activity_new_note)
 
         // Получаем переданный список заметок
-        val notesList = intent.getParcelableArrayListExtra<Note>("notesList") ?: ArrayList()
+        val notesList = intent.getParcelableArrayListExtra<Custom.Note>("notesList") ?: ArrayList()
 
         newNoteHeader = findViewById(R.id.ann_header_acet)
         newNoteText = findViewById(R.id.ann_message_acet)
 
-
         val saveBtn = findViewById<AppCompatButton>(R.id.ann_save_acb)
 
-            saveBtn.setOnClickListener {
-                val headerText = newNoteHeader?.text?.toString() ?: ""
-                val messageText = newNoteText?.text?.toString() ?: ""
+        saveBtn.setOnClickListener {
+            val headerText = newNoteHeader?.text?.toString() ?: ""
+            val messageText = newNoteText?.text?.toString() ?: ""
 
-                val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
-                val dateText = dateFormat.format(Calendar.getInstance().time)
-                // Добавляем новую заметку в список
-                notesList.add(Note(headerText, messageText, dateText))
+            val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
+            val dateText = dateFormat.format(Calendar.getInstance().time)
+            // Добавляем новую заметку в список
+            notesList.add(Custom.Note(headerText, messageText, dateText))
 
-                // Возвращаем обновлённый список обратно в MainActivity
-                val resultIntent = Intent()
-                resultIntent.putParcelableArrayListExtra("updatedNotesList", notesList)
-                setResult(Activity.RESULT_OK, resultIntent)
-                finish()
-            }
-
+            // Возвращаем обновлённый список обратно в MainActivity
+            val resultIntent = Intent()
+            resultIntent.putParcelableArrayListExtra("updatedNotesList", notesList)
+            setResult(Activity.RESULT_OK, resultIntent)
+            finish()
+        }
 
     }
 }
