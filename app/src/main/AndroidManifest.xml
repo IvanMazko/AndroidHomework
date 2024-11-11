@@ -25,7 +25,7 @@
             android:name=".ht16.FirstNoteActivity"
             android:exported="false" />
         <activity
-            android:name=".ht19.MainActivity"
+            android:name=".ht21.MainActivity"
             android:exported="false"
             android:label="Home" />
         <activity
