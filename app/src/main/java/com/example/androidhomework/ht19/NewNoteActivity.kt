@@ -3,10 +3,12 @@ package com.example.androidhomework.ht19
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.androidhomework.R
@@ -25,8 +27,7 @@ class NewNoteActivity : AppCompatActivity() {
         setContentView(R.layout.activity_new_note)
 
         // Получаем переданный список заметок
-        val notesList = intent.getParcelableArrayListExtra<Custom.Note>("notesList") ?: ArrayList()
-
+        val notesList = intent.getParcelableArrayListExtra<Custom>("notesList") ?: ArrayList()
         newNoteHeader = findViewById(R.id.ann_header_acet)
         newNoteText = findViewById(R.id.ann_message_acet)
 
@@ -46,6 +47,11 @@ class NewNoteActivity : AppCompatActivity() {
             resultIntent.putParcelableArrayListExtra("updatedNotesList", notesList)
             setResult(Activity.RESULT_OK, resultIntent)
             finish()
+        }
+
+        val addIconBtn = findViewById<AppCompatButton>(R.id.am_icon_acb)
+        addIconBtn.setOnClickListener {
+            notesList.add(Custom.Icon(AppCompatImageView(this)))
         }
 
     }

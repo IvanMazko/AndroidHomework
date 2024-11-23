@@ -3,6 +3,7 @@ package com.example.androidhomework.ht19
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
@@ -12,6 +13,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +25,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
-    private val listOfNotes: ArrayList<Custom.Note> = ArrayList()
+    private val listOfNotes: ArrayList<Custom> = ArrayList()
     private lateinit var adapter: Adapter
 
     companion object {
@@ -55,10 +57,6 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(intent, REQUEST_CODE_NEW_NOTE)
         }
 
-        val addIconBtn = findViewById<AppCompatButton>(R.id.am_icon_acb)
-        addIconBtn.setOnClickListener {
-
-        }
         val signOutBtn = findViewById<AppCompatButton>(R.id.am_signOut_btn)
         signOutBtn.setOnClickListener {
             val intent = Intent(this, RegistrationActivity::class.java)
