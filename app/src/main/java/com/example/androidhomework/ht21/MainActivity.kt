@@ -29,9 +29,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.new_activity_main)
         if(savedInstanceState == null){
-            supportFragmentManager.beginTransaction()
-                .add(R.id.splashFragmentContainerView, SplashFragment(), "SplashFragment")
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.fragmentContainerView, SplashFragment(), "SplashFragment")
                 .commit()
         }
 

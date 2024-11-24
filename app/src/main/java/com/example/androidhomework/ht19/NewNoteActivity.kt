@@ -33,21 +33,22 @@ class NewNoteActivity : AppCompatActivity() {
 
         val saveBtn = findViewById<AppCompatButton>(R.id.ann_save_acb)
 
-            saveBtn.setOnClickListener {
-                val headerText = newNoteHeader?.text?.toString() ?: ""
-                val messageText = newNoteText?.text?.toString() ?: ""
+        saveBtn.setOnClickListener {
+            val headerText = newNoteHeader?.text?.toString() ?: ""
+            val messageText = newNoteText?.text?.toString() ?: ""
 
-                val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
-                val dateText = dateFormat.format(Calendar.getInstance().time)
-                // Добавляем новую заметку в список
-                notesList.add(Note(headerText, messageText, dateText))
+            val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
+            val dateText = dateFormat.format(Calendar.getInstance().time)
+            // Добавляем новую заметку в список
+            notesList.add(Note(headerText, messageText, dateText))
 
-                // Возвращаем обновлённый список обратно в MainActivity
-                val resultIntent = Intent()
-                resultIntent.putParcelableArrayListExtra("updatedNotesList", notesList)
-                setResult(Activity.RESULT_OK, resultIntent)
-                finish()
-            }
+            // Возвращаем обновлённый список обратно в MainActivity
+            val resultIntent = Intent()
+            resultIntent.putParcelableArrayListExtra("updatedNotesList", notesList)
+            setResult(Activity.RESULT_OK, resultIntent)
+            finish()
+        }
+
 
 
     }

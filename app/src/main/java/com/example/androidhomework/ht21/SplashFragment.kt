@@ -16,7 +16,7 @@ class SplashFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val currentView = inflater.inflate(R.layout.fragment_splash, container, false)
+        val currentView = inflater.inflate(R.layout.activity_splash, container, false)
         return currentView
     }
 
@@ -24,6 +24,7 @@ class SplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Handler().postDelayed({
             parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, RegistrationFragment(),"RegistrationFragment")
                 .commit()
         }, 3000)
     }
