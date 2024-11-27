@@ -1,7 +1,5 @@
-package com.example.androidhomework.ht21
+package com.example.androidhomework.presentation.view.fragments
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +8,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
 import com.example.androidhomework.R
-import com.example.androidhomework.ht19.Note
+import com.example.androidhomework.domain.model.Note
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -26,7 +24,7 @@ class NewNoteFragment:Fragment() {
     }
 
     companion object{
-        fun newInstance(notesList: ArrayList<Note>): MainFragment{
+        fun newInstance(notesList: ArrayList<Note>): MainFragment {
             val mainFragment = MainFragment()
             val args = Bundle()
             args.putParcelableArrayList("updatedNotesList", notesList)

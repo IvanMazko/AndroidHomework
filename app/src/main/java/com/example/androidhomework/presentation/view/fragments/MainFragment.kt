@@ -1,4 +1,4 @@
-package com.example.androidhomework.ht21
+package com.example.androidhomework.presentation.view.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,13 +9,19 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidhomework.R
-import com.example.androidhomework.ht19.Adapter
-import com.example.androidhomework.ht19.Note
+import com.example.androidhomework.presentation.view.Adapter
+import com.example.androidhomework.domain.model.Note
+import com.example.androidhomework.presentation.view_model.ViewModel
 
 class MainFragment : Fragment() {
+
+    private val viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)  .create(ViewModel::class.java)
+    private val listOfNotes: ArrayList<Note> = ArrayList()
+    private var adapter: Adapter?=null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,13 +32,10 @@ class MainFragment : Fragment() {
         return currentView
     }
 
-    private val listOfNotes: ArrayList<Note> = ArrayList()
-    private lateinit var adapter: Adapter
+
 
     companion object {
-        const val REQUEST_CODE_NEW_NOTE = 1
-
-        fun newInstance(listOfNotes: ArrayList<Note>): NewNoteFragment{
+        fun newInstance(listOfNotes: ArrayList<Note>): NewNoteFragment {
             val newNoteFragment = NewNoteFragment()
             val args = Bundle()
             args.putParcelableArrayList("notesList", listOfNotes)
@@ -76,7 +79,7 @@ class MainFragment : Fragment() {
         if (updatedNotesList != null) {
             listOfNotes.clear()
             listOfNotes.addAll(updatedNotesList)
-            adapter.notifyDataSetChanged()
+            adapter?.notifyDataSetChanged()
         }
     }
 
@@ -88,11 +91,11 @@ class MainFragment : Fragment() {
                 R.id.menu_delete -> {
                     if (position >= 0 && position < listOfNotes.size) {
                         listOfNotes.removeAt(position)
-                        adapter.notifyItemRemoved(position)
+                        adapter?.notifyItemRemoved(position)
 
                     }
                     else if (listOfNotes.isEmpty()) {
-                        adapter.notifyDataSetChanged()
+                        adapter?.notifyDataSetChanged()
                     }
                     true
                 }
@@ -101,18 +104,6 @@ class MainFragment : Fragment() {
         }
         popupMenu.show()
     }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == REQUEST_CODE_NEW_NOTE && resultCode == Activity.RESULT_OK) {
-//            val updatedNotesList = data?.getParcelableArrayListExtra<Note>("updatedNotesList")
-//            if (updatedNotesList != null) {
-//                listOfNotes.clear()
-//                listOfNotes.addAll(updatedNotesList)
-//                adapter.notifyDataSetChanged()
-//            }
-//        }
-//    }
 
 }
 

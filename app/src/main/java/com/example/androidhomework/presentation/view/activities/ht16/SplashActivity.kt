@@ -1,4 +1,4 @@
-package com.example.androidhomework.ht16
+package com.example.androidhomework.presentation.view.activities.ht16
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,7 +6,7 @@ import android.os.Handler
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.androidhomework.R
-import com.example.androidhomework.ht18.RegistrationActivity
+import com.example.androidhomework.presentation.view.activities.ht18.RegistrationActivity
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

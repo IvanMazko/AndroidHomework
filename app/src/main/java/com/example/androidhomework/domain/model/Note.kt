@@ -1,11 +1,10 @@
-package com.example.androidhomework.ht19
+package com.example.androidhomework.domain.model
 
-import android.os.Parcel
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class Note (
+data class Note (
     var header : String,
     val message : String,
     val date : String,

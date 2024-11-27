@@ -1,20 +1,26 @@
-package com.example.androidhomework.ht21
+package com.example.androidhomework.presentation.view.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.androidhomework.R
-import com.example.androidhomework.ht19.Note
+import com.example.androidhomework.presentation.view_model.RegistrationFragmentViewModel
 
 class RegistrationFragment : Fragment() {
+
+    private var viewModel: RegistrationFragmentViewModel ?= null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel =
+            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(RegistrationFragmentViewModel::class.java)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,7 +31,7 @@ class RegistrationFragment : Fragment() {
     }
 
     companion object{
-        fun newInstance(login: AppCompatEditText): MainFragment{
+        fun newInstance(login: AppCompatEditText): MainFragment {
             val mainFragment = MainFragment()
             val args = Bundle()
             args.putString("username", login.text.toString())
@@ -49,5 +55,7 @@ class RegistrationFragment : Fragment() {
                     .commit()
             }
         }
+
+        viewModel?.publicLiveData?.observe(this.viewLifecycleOwner) {}
     }
 }

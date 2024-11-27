@@ -1,4 +1,4 @@
-package com.example.androidhomework.ht19
+package com.example.androidhomework.presentation.view.activities.ht19
 
 import android.app.Activity
 import android.content.Intent
@@ -7,9 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.androidhomework.R
+import com.example.androidhomework.domain.model.Note
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale

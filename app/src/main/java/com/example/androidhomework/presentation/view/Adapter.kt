@@ -1,4 +1,4 @@
-package com.example.androidhomework.ht19
+package com.example.androidhomework.presentation.view
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidhomework.R
-import kotlinx.coroutines.processNextEventInCurrentThread
+import com.example.androidhomework.domain.model.Note
 
 class Adapter(
     val list: List<Note>,
