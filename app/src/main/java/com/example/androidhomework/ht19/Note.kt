@@ -5,8 +5,10 @@ import android.os.Parcelable
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
-sealed interface Custom{
+@Parcelize
+sealed interface Custom : Parcelable{
     @Parcelize
     class Note (
         var header : String,
@@ -14,9 +16,8 @@ sealed interface Custom{
         val date : String,
     ) : Parcelable, Custom
 
-    class Icon (
-        val icon : AppCompatImageView
-    ) : Custom
+    @Parcelize
+    class Icon : Parcelable, Custom
 }
 
 

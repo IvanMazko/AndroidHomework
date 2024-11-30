@@ -65,30 +65,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showPopupMenu(view: View, position: Int){
+        val note = listOfNotes[position];
         val popupMenu = PopupMenu(view.context, view)
-        popupMenu.menuInflater.inflate(R.menu.note_options_menu, popupMenu.menu)
+
+        when(note){
+            is Custom.Note -> {
+                popupMenu.menuInflater.inflate(R.menu.note_options_menu, popupMenu.menu)
+            }
+            is Custom.Icon -> {
+                popupMenu.menuInflater.inflate(R.menu.icon_options_menu, popupMenu.menu)
+            }
+        }
+
         popupMenu.setOnMenuItemClickListener { menuItem : MenuItem ->
             when(menuItem.itemId){
                 R.id.menu_delete -> {
-                    if (position >= 0 && position < listOfNotes.size) {
-                        listOfNotes.removeAt(position)
-                        adapter.notifyItemRemoved(position)
-
-                    }
-                    else if (listOfNotes.isEmpty()) {
-                        adapter.notifyDataSetChanged()
-                    }
+                    deleteNote(listOfNotes, position)
                     true
                 }
                 R.id.menu_share -> {
-                    val message = "Header : " + listOfNotes[position].header +
-                            "\nMessage : " + listOfNotes[position].message +
-                            "\nDate : " + listOfNotes[position].date
-                    val intent = Intent(Intent.ACTION_SEND)
-                    intent.setType("text/plain")
-                    intent.putExtra(Intent.EXTRA_TEXT, message)
-                    val chosenIntent = Intent.createChooser(intent, "Share with:")
-                    startActivity(chosenIntent)
+                    if(note is Custom.Note){
+                        shareNote(note)
+                    }
                     true
                 }
                 else -> false
@@ -96,6 +94,21 @@ class MainActivity : AppCompatActivity() {
         }
         popupMenu.show()
     }
+
+    fun deleteNote(listOfNotes : ArrayList<Custom>, position: Int){
+        listOfNotes.removeAt(position)
+        adapter.notifyDataSetChanged()
+    }
+    fun shareNote(note: Custom.Note){
+        val message = "Header: ${note.header}\nMessage: ${note.message}\nDate: ${note.date}"
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, message)
+        }
+        val chosenIntent = Intent.createChooser(intent, "Share with:")
+        startActivity(chosenIntent)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_NEW_NOTE && resultCode == Activity.RESULT_OK) {

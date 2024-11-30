@@ -51,7 +51,12 @@ class NewNoteActivity : AppCompatActivity() {
 
         val addIconBtn = findViewById<AppCompatButton>(R.id.am_icon_acb)
         addIconBtn.setOnClickListener {
-            notesList.add(Custom.Icon(AppCompatImageView(this)))
+            notesList.add(Custom.Icon())
+            // Возвращаем обновлённый список обратно в MainActivity
+            val resultIntent = Intent()
+            resultIntent.putParcelableArrayListExtra("updatedNotesList", notesList)
+            setResult(Activity.RESULT_OK, resultIntent)
+            finish()
         }
 
     }
