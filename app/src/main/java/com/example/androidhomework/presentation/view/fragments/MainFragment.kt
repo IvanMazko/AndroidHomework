@@ -15,11 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.androidhomework.R
 import com.example.androidhomework.presentation.view.Adapter
 import com.example.androidhomework.domain.model.Note
+import com.example.androidhomework.presentation.view_model.RegistrationFragmentViewModel
 import com.example.androidhomework.presentation.view_model.ViewModel
 
 class MainFragment : Fragment() {
 
-    private val viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)  .create(ViewModel::class.java)
+    private val viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(RegistrationFragmentViewModel::class.java)
     private val listOfNotes: ArrayList<Note> = ArrayList()
     private var adapter: Adapter?=null
 
@@ -47,6 +48,10 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.publicLiveData.observe(this.viewLifecycleOwner){
+
+        }
 
         val username = arguments?.getString("username")
         val userNameTextView = view.findViewById<AppCompatTextView>(R.id.am_userName_actv)
