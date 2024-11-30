@@ -10,13 +10,8 @@ import com.example.androidhomework.presentation.view_model.ViewModel
 
 class MainActivity : AppCompatActivity() {
 
-    //private var _binding: ActivityMainBinding? = null
-    //private val binding get() = _binding!!
-
-    private val viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(application)  .create(ViewModel::class.java)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //_binding = ActivityMainBinding.inflate(this.layoutInflater)
         setContentView(R.layout.new_activity_main)
 
         if(savedInstanceState == null){
@@ -27,8 +22,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    override fun onDestroy() {
-//        _binding = null
-//        super.onDestroy()
-//    }
 }
