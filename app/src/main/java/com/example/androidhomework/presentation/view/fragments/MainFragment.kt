@@ -16,17 +16,21 @@ import com.example.androidhomework.R
 import com.example.androidhomework.databinding.ActivityMainBinding
 import com.example.androidhomework.presentation.view.Adapter
 import com.example.androidhomework.domain.model.Note
+import com.example.androidhomework.presentation.view_model.MainFragmentViewModel
 import com.example.androidhomework.presentation.view_model.RegistrationFragmentViewModel
 import com.example.androidhomework.presentation.view_model.ViewModel
 
 class MainFragment : Fragment() {
 
-    private var _binding: ActivityMainBinding? = null
-    private val binding get() = _binding!!
-    private val viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(RegistrationFragmentViewModel::class.java)
+    private var viewModel: MainFragmentViewModel ?= null
     private val listOfNotes: ArrayList<Note> = ArrayList()
     private var adapter: Adapter?=null
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(MainFragmentViewModel::class.java)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,27 +42,32 @@ class MainFragment : Fragment() {
 
 
 
-    companion object {
-        fun newInstance(listOfNotes: ArrayList<Note>): NewNoteFragment {
-            val newNoteFragment = NewNoteFragment()
-            val args = Bundle()
-            args.putParcelableArrayList("notesList", listOfNotes)
-            newNoteFragment.arguments = args
-            return newNoteFragment
-        }
-    }
+//    companion object {
+//        fun newInstance(listOfNotes: ArrayList<Note>): NewNoteFragment {
+//            val newNoteFragment = NewNoteFragment()
+//            val args = Bundle()
+//            args.putParcelableArrayList("notesList", listOfNotes)
+//            newNoteFragment.arguments = args
+//            return newNoteFragment
+//        }
+//    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = ActivityMainBinding.inflate(this.layoutInflater)
-        viewModel.liveData.observe(this) { newData ->
-            binding.
+//        _binding = ActivityMainBinding.inflate(this.layoutInflater)
+//        viewModel.liveData.observe(this) { newData ->
+//            binding.
+//        }
+
+        val username = arguments?.getString("username") ?: "Default userName"
+        viewModel?.setUserName(username)
+        val userNameTextView = view.findViewById<AppCompatTextView>(R.id.am_userName_actv)
+
+        viewModel?.userNameLiveData?.observe(this.viewLifecycleOwner){ newData ->
+            updateUserName(userNameTextView, newData)
         }
 
-        val username = arguments?.getString("username")
-        val userNameTextView = view.findViewById<AppCompatTextView>(R.id.am_userName_actv)
-        userNameTextView.text = username
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.am_notes_rv)
         adapter = Adapter(listOfNotes){view, position: Int ->
@@ -68,26 +77,48 @@ class MainFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+
         val addNewNoteBtn = view.findViewById<AppCompatButton>(R.id.am_addNewNote_acb)
-        addNewNoteBtn.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, newInstance(listOfNotes),"NewNoteFragment")
-                .commit()
+        val signOutBtn = view.findViewById<AppCompatButton>(R.id.am_signOut_btn)
+        initClickListeners(addNewNoteBtn, signOutBtn)
+
+
+        val updatedNotesList: ArrayList<Note>? = arguments?.getParcelableArrayList("updatedNotesList")
+        viewModel?.setNoteList(updatedNotesList)
+
+        viewModel?.noteListLiveData?.observe(this.viewLifecycleOwner){newData ->
+            updateNoteList(newData)
         }
 
-        val signOutBtn = view.findViewById<AppCompatButton>(R.id.am_signOut_btn)
+
+//        if (updatedNotesList != null) {
+//            listOfNotes.clear()
+//            listOfNotes.addAll(updatedNotesList)
+//            adapter?.notifyDataSetChanged()
+//        }
+    }
+
+    private fun updateUserName(userNameTextView: AppCompatTextView, username: String){
+        userNameTextView.text = username
+    }
+
+    private fun updateNoteList(noteList:ArrayList<Note>?){
+        if (noteList != null) {
+            listOfNotes.clear()
+            listOfNotes.addAll(noteList)
+            adapter?.notifyDataSetChanged()
+        }
+    }
+    fun initClickListeners(addNewNoteBtn:AppCompatButton, signOutBtn:AppCompatButton){
+        addNewNoteBtn.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, viewModel!!.toNextScreen(listOfNotes),"NewNoteFragment")
+                .commit()
+        }
         signOutBtn.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, RegistrationFragment(),"RegistrationFragment")
                 .commit()
-        }
-
-
-        val updatedNotesList: ArrayList<Note>? = arguments?.getParcelableArrayList("updatedNotesList")
-        if (updatedNotesList != null) {
-            listOfNotes.clear()
-            listOfNotes.addAll(updatedNotesList)
-            adapter?.notifyDataSetChanged()
         }
     }
 
@@ -97,14 +128,8 @@ class MainFragment : Fragment() {
         popupMenu.setOnMenuItemClickListener { menuItem : MenuItem ->
             when(menuItem.itemId){
                 R.id.menu_delete -> {
-                    if (position >= 0 && position < listOfNotes.size) {
-                        listOfNotes.removeAt(position)
-                        adapter?.notifyItemRemoved(position)
-
-                    }
-                    else if (listOfNotes.isEmpty()) {
-                        adapter?.notifyDataSetChanged()
-                    }
+                    listOfNotes.removeAt(position)
+                    adapter?.notifyDataSetChanged()
                     true
                 }
                 else -> false
@@ -113,9 +138,5 @@ class MainFragment : Fragment() {
         popupMenu.show()
     }
 
-    override fun onDestroy() {
-        _binding = null
-        super.onDestroy()
-    }
 }
 

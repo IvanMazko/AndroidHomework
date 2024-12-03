@@ -18,8 +18,7 @@ class RegistrationFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel =
-            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(RegistrationFragmentViewModel::class.java)
+        viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(RegistrationFragmentViewModel::class.java)
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,15 +29,6 @@ class RegistrationFragment : Fragment() {
         return currentView
     }
 
-    companion object{
-        fun newInstance(login: AppCompatEditText): MainFragment {
-            val mainFragment = MainFragment()
-            val args = Bundle()
-            args.putString("username", login.text.toString())
-            mainFragment.arguments = args
-            return mainFragment
-        }
-    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -51,11 +41,11 @@ class RegistrationFragment : Fragment() {
                 Toast.makeText(requireContext(), "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show()
             } else {
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerView, newInstance(login),"MainFragment")
+                    .replace(R.id.fragmentContainerView, viewModel!!.toNextScreen(login),"MainFragment")
                     .commit()
             }
         }
 
-        viewModel?.publicLiveData?.observe(this.viewLifecycleOwner) {}
+//        viewModel?.publicLiveData?.observe(this.viewLifecycleOwner) {}
     }
 }
