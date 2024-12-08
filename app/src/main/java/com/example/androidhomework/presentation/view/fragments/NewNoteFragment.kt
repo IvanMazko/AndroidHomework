@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
@@ -34,15 +35,7 @@ class NewNoteFragment:Fragment() {
         return currentView
     }
 
-//    companion object{
-//        fun newInstance(notesList: ArrayList<Note>): MainFragment {
-//            val mainFragment = MainFragment()
-//            val args = Bundle()
-//            args.putParcelableArrayList("updatedNotesList", notesList)
-//            mainFragment.arguments = args
-//            return mainFragment
-//        }
-//    }
+    // create editTexts
     private var newNoteHeader: AppCompatEditText? = null
     private var newNoteText: AppCompatEditText? = null
 
@@ -52,23 +45,32 @@ class NewNoteFragment:Fragment() {
         // Получаем переданный список заметок
         val notesList: ArrayList<Note>? = arguments?.getParcelableArrayList("notesList")
 
+        //initialize ediTexts
         newNoteHeader = view.findViewById(R.id.ann_header_acet)
-        val headerText = newNoteHeader?.text?.toString() ?: ""
         newNoteText = view.findViewById(R.id.ann_message_acet)
-        val messageText = newNoteText?.text?.toString() ?: ""
+
 
         val saveBtn = view.findViewById<AppCompatButton>(R.id.ann_save_acb)
-
-        initClickListener(saveBtn, notesList, headerText, messageText)
+        initClickListener(saveBtn, notesList)
     }
 
-    private fun initClickListener(saveBtn:AppCompatButton, notesList:ArrayList<Note>?, headerText:String, messageText:String){
+    private fun initClickListener(saveBtn:AppCompatButton, notesList:ArrayList<Note>?){
         saveBtn.setOnClickListener {
+
+            // Получаем текст непосредственно перед сохранением
+            val headerText = newNoteHeader?.text?.toString() ?: ""
+            val messageText = newNoteText?.text?.toString() ?: ""
 
             val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
             val dateText = dateFormat.format(Calendar.getInstance().time)
-            // Добавляем новую заметку в список
-            notesList?.add(Note(headerText, messageText, dateText))
+
+            if (headerText.isNotEmpty() || messageText.isNotEmpty()) {
+                // Добавляем новую заметку в список
+                notesList?.add(Note(headerText, messageText, dateText))
+            }
+            else{
+                Toast.makeText(requireContext(), "Нет содержимого для сохранения. Заметка удалена.", Toast.LENGTH_SHORT).show()
+            }
 
             // Возвращаем обновлённый список обратно в MainActivity
             parentFragmentManager.beginTransaction()
