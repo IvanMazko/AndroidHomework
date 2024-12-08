@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.androidhomework.R
 import com.example.androidhomework.databinding.ActivityMainBinding
 import com.example.androidhomework.presentation.view.fragments.SplashFragment
-import com.example.androidhomework.presentation.view_model.ViewModel
 
 class MainActivity : AppCompatActivity() {
 

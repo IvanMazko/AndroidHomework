@@ -19,7 +19,6 @@ import com.example.androidhomework.presentation.view.Adapter
 import com.example.androidhomework.domain.model.Note
 import com.example.androidhomework.presentation.view_model.MainFragmentViewModel
 import com.example.androidhomework.presentation.view_model.RegistrationFragmentViewModel
-import com.example.androidhomework.presentation.view_model.ViewModel
 
 class MainFragment : Fragment() {
 
