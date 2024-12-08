@@ -32,10 +32,12 @@ class RegistrationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // creating editTexts and a button
         val login = view.findViewById<AppCompatEditText>(R.id.login_et)
         val password = view.findViewById<AppCompatEditText>(R.id.password_et)
         val button = view.findViewById<AppCompatButton>(R.id.sign_up_btn)
 
+        //transiting to the next fragment
         button.setOnClickListener {
             if (login.text.toString().isEmpty() || password.text.toString().isEmpty()) {
                 Toast.makeText(requireContext(), "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show()
