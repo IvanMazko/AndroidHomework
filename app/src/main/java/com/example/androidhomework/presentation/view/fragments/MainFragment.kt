@@ -17,6 +17,7 @@ import com.example.androidhomework.R
 import com.example.androidhomework.databinding.ActivityMainBinding
 import com.example.androidhomework.presentation.view.Adapter
 import com.example.androidhomework.domain.model.Note
+import com.example.androidhomework.presentation.actions.MainFragmentAction
 import com.example.androidhomework.presentation.view_model.MainFragmentViewModel
 import com.example.androidhomework.presentation.view_model.RegistrationFragmentViewModel
 
@@ -45,8 +46,8 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //initializing liveData and using Observer
-        val username = arguments?.getString("username") ?: "Default userName"  // нужно, чтобы эти 2 строки выполнялись только при переходе из фрагмента регистрации,
-        viewModel?.setUserName(username)                                           // а во всех других случаях значение бралось из вьюмодели
+        val username = arguments?.getString("username") ?: "Default userName"  // нужно, чтобы эти 2 строки выполнялись только при переходе из фрагмента регистрации, а во всех других случаях значение бралось из вьюмодели
+        viewModel?.handleAction(MainFragmentAction.SetUserName, username, listOfNotes) // здесь вообще listOfNotes не нужен, добавляю только чтобы соответствовать параметрам handleAction()
         val userNameTextView = view.findViewById<AppCompatTextView>(R.id.am_userName_actv)
 
         viewModel?.userNameLiveData?.observe(this.viewLifecycleOwner){ newData ->

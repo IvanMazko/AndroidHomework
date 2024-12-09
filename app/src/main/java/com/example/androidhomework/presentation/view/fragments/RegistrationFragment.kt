@@ -10,6 +10,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.androidhomework.R
+import com.example.androidhomework.presentation.actions.RegistrationFragmentAction
 import com.example.androidhomework.presentation.view_model.RegistrationFragmentViewModel
 
 class RegistrationFragment : Fragment() {
@@ -43,7 +44,7 @@ class RegistrationFragment : Fragment() {
                 Toast.makeText(requireContext(), "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show()
             } else {
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerView, viewModel!!.toNextScreen(login),"MainFragment")
+                    .replace(R.id.fragmentContainerView, viewModel!!.handleAction(RegistrationFragmentAction.ToNextScreen, login),"MainFragment")
                     .commit()
             }
         }
