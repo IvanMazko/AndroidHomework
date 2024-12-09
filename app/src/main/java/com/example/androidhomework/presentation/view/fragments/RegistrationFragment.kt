@@ -39,15 +39,30 @@ class RegistrationFragment : Fragment() {
 
         //transiting to the next fragment
         button.setOnClickListener {
-            if (login.text.toString().isEmpty() || password.text.toString().isEmpty()) {
-                Toast.makeText(requireContext(), "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show()
-            } else {
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerView, viewModel!!.toNextScreen(login),"MainFragment")
-                    .commit()
-            }
+            viewModel?.checkData(login.text.toString(), password.text.toString())
+
         }
 
-//        viewModel?.publicLiveData?.observe(this.viewLifecycleOwner) {}
+        observeViewModel()
+    }
+
+    private fun observeViewModel(){
+        viewModel?.publicLiveData?.observe(viewLifecycleOwner){ newData ->
+            if (newData != null){
+                toNewScreen(newData)
+            }
+            else{
+                Toast.makeText(requireContext(), "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+    }
+
+    private fun toNewScreen(newData:Bundle){
+        val mainFragment = MainFragment()
+        mainFragment.arguments = newData
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, mainFragment,"MainFragment")
+            .commit()
     }
 }
