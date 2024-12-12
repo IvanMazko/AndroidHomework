@@ -68,14 +68,8 @@ class MainActivity : AppCompatActivity() {
         popupMenu.setOnMenuItemClickListener { menuItem : MenuItem ->
             when(menuItem.itemId){
                 R.id.menu_delete -> {
-                    if (position >= 0 && position < listOfNotes.size) {
                         listOfNotes.removeAt(position)
-                        adapter.notifyItemRemoved(position)
-
-                    }
-                    else if (listOfNotes.isEmpty()) {
                         adapter.notifyDataSetChanged()
-                    }
                     true
                 }
                 else -> false

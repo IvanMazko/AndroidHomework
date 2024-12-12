@@ -30,9 +30,13 @@ class Adapter(
         holder.itemView.setOnClickListener{
             callback.invoke(holder.itemView, position)
         }
-        holder.header.text = list[position].header
-        holder.message.text = list[position].message
-        holder.date.text = list[position].date
+
+        val item = list[position]
+        with(holder){
+            header.text = item.header
+            message.text = item.message
+            date.text = item.date
+        }
     }
 
     override fun getItemCount(): Int = list.size
