@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatTextView
 import com.example.androidhomework.R
 import com.example.androidhomework.ht16.FirstNoteActivity
 import com.example.androidhomework.ht16.SecondNoteActivity
@@ -15,6 +16,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+
+        val username = intent.getStringExtra("username")
+
+        var userNameTextView:AppCompatTextView? = null
+        userNameTextView = findViewById(R.id.userName_tv)
+        userNameTextView.text = username
 
         val intent1 = Intent(this@MainActivity, FirstNoteActivity::class.java)
         val intent2 = Intent(this@MainActivity, SecondNoteActivity::class.java)
