@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import com.example.androidhomework.domain.model.Note
 import com.example.androidhomework.presentation.view.fragments.NewNoteFragment
 
@@ -23,11 +24,4 @@ class MainFragmentViewModel:ViewModel() {
         _noteListLiveData.value = noteList
     }
 
-    fun toNextScreen(listOfNotes: ArrayList<Note>): NewNoteFragment {
-        val newNoteFragment = NewNoteFragment()
-        val args = Bundle()
-        args.putParcelableArrayList("notesList", listOfNotes)
-        newNoteFragment.arguments = args
-        return newNoteFragment
-    }
 }

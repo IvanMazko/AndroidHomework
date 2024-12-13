@@ -37,27 +37,29 @@ class RegistrationFragment : Fragment() {
         val password = view.findViewById<AppCompatEditText>(R.id.password_et)
         val button = view.findViewById<AppCompatButton>(R.id.sign_up_btn)
 
-        //transiting to the next fragment
+        //checking Userdata and initializing the liveData
         button.setOnClickListener {
             viewModel?.checkData(login.text.toString(), password.text.toString())
-
+            observeViewModel()
         }
 
-        observeViewModel()
+
     }
 
+    //taking new data
     private fun observeViewModel(){
         viewModel?.publicLiveData?.observe(viewLifecycleOwner){ newData ->
             if (newData != null){
                 toNewScreen(newData)
             }
             else{
-                Toast.makeText(requireContext(), "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show() //кроме нужных срабатываний также всегда вызывается при переходе на фрагмент
             }
 
         }
     }
 
+    //transit to next screen
     private fun toNewScreen(newData:Bundle){
         val mainFragment = MainFragment()
         mainFragment.arguments = newData

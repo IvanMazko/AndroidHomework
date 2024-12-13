@@ -20,7 +20,7 @@ import java.util.Locale
 class NewNoteFragment:Fragment() {
 
     private var viewModel: NewNoteFragmentViewModel ?= null
-
+    private var notesList: ArrayList<Note> ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +43,7 @@ class NewNoteFragment:Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Получаем переданный список заметок
-        val notesList: ArrayList<Note>? = arguments?.getParcelableArrayList("notesList")
+         notesList = arguments?.getParcelableArrayList("notesList")
 
         //initialize ediTexts
         newNoteHeader = view.findViewById(R.id.ann_header_acet)
@@ -56,27 +56,41 @@ class NewNoteFragment:Fragment() {
 
     private fun initClickListener(saveBtn:AppCompatButton, notesList:ArrayList<Note>?){
         saveBtn.setOnClickListener {
-
             // Получаем текст непосредственно перед сохранением
             val headerText = newNoteHeader?.text?.toString() ?: ""
             val messageText = newNoteText?.text?.toString() ?: ""
+            viewModel?.checkData(headerText, messageText, notesList)
 
-            val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
-            val dateText = dateFormat.format(Calendar.getInstance().time)
+            observeViewModel()
+        }
+    }
 
-            if (headerText.isNotEmpty() || messageText.isNotEmpty()) {
-                // Добавляем новую заметку в список
-                notesList?.add(Note(headerText, messageText, dateText))
+    private fun observeViewModel(){
+        viewModel?.publicLiveData?.observe(viewLifecycleOwner){ newData ->
+            if (newData != null){
+                toMainScreen(newData)
             }
             else{
-                Toast.makeText(requireContext(), "Нет содержимого для сохранения. Заметка удалена.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Нет содержимого для сохранения. Заметка удалена.", Toast.LENGTH_SHORT).show() // мне нужно, чтобы происходил переход на главный экран и одновременно высвечивалась эта надпись, поэтому ниже пришлось объявлять args, использовать  parentFragmentManager и тд
+                val mainFragment = MainFragment()
+                val args = Bundle()
+                args.putParcelableArrayList("updatedNotesList", notesList ?: ArrayList()) // должен передаваться список, который пришёл (без изменений)
+                mainFragment.arguments = args
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainerView, mainFragment, "MainFragment")
+                    .commit()
             }
 
-            // Возвращаем обновлённый список обратно в MainActivity
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, viewModel!!.toNextScreen(notesList), "MainFragment")
-                .commit()
         }
+    }
+
+    // Возвращаем обновлённый список обратно в MainActivity
+    private fun toMainScreen(newData:Bundle){
+        val mainFragment = MainFragment()
+        mainFragment.arguments = newData
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, mainFragment, "MainFragment")
+            .commit()
     }
 
 }

@@ -44,7 +44,7 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //initializing liveData and using Observer
+        //initializing userLiveData and using Observer
         val username = arguments?.getString("username") ?: "Default userName"  // нужно, чтобы эти 2 строки выполнялись только при переходе из фрагмента регистрации,
         viewModel?.setUserName(username)                                           // а во всех других случаях значение бралось из вьюмодели
         val userNameTextView = view.findViewById<AppCompatTextView>(R.id.am_userName_actv)
@@ -73,10 +73,14 @@ class MainFragment : Fragment() {
         val updatedNotesList: ArrayList<Note>? = arguments?.getParcelableArrayList("updatedNotesList")
         viewModel?.setNoteList(updatedNotesList)
 
+        observeViewModel()
+    }
+
+
+    private fun observeViewModel(){
         viewModel?.noteListLiveData?.observe(this.viewLifecycleOwner){newData ->
             updateNoteList(newData)
         }
-
     }
 
     private fun updateUserName(userNameTextView: AppCompatTextView, username: String){
@@ -94,16 +98,29 @@ class MainFragment : Fragment() {
 
     private fun initClickListeners(addNewNoteBtn:AppCompatButton, signOutBtn:AppCompatButton){
         addNewNoteBtn.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, viewModel!!.toNextScreen(listOfNotes),"NewNoteFragment")
-                .commit()
+            toNextScreen()
         }
         signOutBtn.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, RegistrationFragment(),"RegistrationFragment")
-                .commit()
+            toRegistrationScreen()
         }
     }
+
+    private fun toNextScreen(){
+        val newNoteFragment = NewNoteFragment()
+        val args = Bundle()
+        args.putParcelableArrayList("notesList", listOfNotes)
+        newNoteFragment.arguments = args
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, newNoteFragment,"NewNoteFragment")
+            .commit()
+    }
+
+    private fun toRegistrationScreen(){
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, RegistrationFragment(),"RegistrationFragment")
+            .commit()
+    }
+
 
     private fun showPopupMenu(view: View, position: Int){
         val popupMenu = PopupMenu(view.context, view)
