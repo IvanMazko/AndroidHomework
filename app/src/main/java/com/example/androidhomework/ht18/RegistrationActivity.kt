@@ -7,10 +7,8 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.androidhomework.R
-import com.example.androidhomework.ht16.MainActivity
+import com.example.androidhomework.ht19.MainActivity
 
 class RegistrationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +24,6 @@ class RegistrationActivity : AppCompatActivity() {
 
         val button = findViewById<Button>(R.id.sign_up_btn)
 
-
         button.setOnClickListener {
             if (login.text.toString().isEmpty() || password.text.toString().isEmpty()) {
                 Toast.makeText(this, "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show()
@@ -34,11 +31,9 @@ class RegistrationActivity : AppCompatActivity() {
                 val intent = Intent(this, MainActivity::class.java).also {
                     it.putExtra("username", login.text.toString())
                     startActivity(it)
+                    finish()
                 }
-
             }
         }
-
-
     }
 }
