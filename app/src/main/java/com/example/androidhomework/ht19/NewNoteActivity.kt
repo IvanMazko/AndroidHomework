@@ -25,7 +25,7 @@ class NewNoteActivity : AppCompatActivity() {
         setContentView(R.layout.activity_new_note)
 
         // Получаем переданный список заметок
-        val notesList = intent.getParcelableArrayListExtra<Note>("notesList") ?: ArrayList()
+        val notesList = intent.getParcelableArrayListExtra<Custom.Note>("notesList") ?: ArrayList()
 
         newNoteHeader = findViewById(R.id.ann_header_acet)
         newNoteText = findViewById(R.id.ann_message_acet)
@@ -40,7 +40,7 @@ class NewNoteActivity : AppCompatActivity() {
             val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
             val dateText = dateFormat.format(Calendar.getInstance().time)
             // Добавляем новую заметку в список
-            notesList.add(Note(headerText, messageText, dateText))
+            notesList.add(Custom.Note(headerText, messageText, dateText))
 
             // Возвращаем обновлённый список обратно в MainActivity
             val resultIntent = Intent()
