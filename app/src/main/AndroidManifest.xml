@@ -13,26 +13,7 @@
         android:theme="@style/Theme.AndroidHomework"
         tools:targetApi="31">
         <activity
-            android:name=".ht18.RegistrationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ht16.ThirdNodeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ht16.SecondNoteActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ht16.FirstNoteActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ht19.MainActivity"
-            android:exported="false"
-            android:label="Home" />
-        <activity
-            android:name=".ht19.NewNoteActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ht16.SplashActivity"
+            android:name=".ht21.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

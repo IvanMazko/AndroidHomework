@@ -3,12 +3,10 @@ package com.example.androidhomework.ht19
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.androidhomework.R
@@ -27,9 +25,11 @@ class NewNoteActivity : AppCompatActivity() {
         setContentView(R.layout.activity_new_note)
 
         // Получаем переданный список заметок
-        val notesList = intent.getParcelableArrayListExtra<Custom>("notesList") ?: ArrayList()
+        val notesList = intent.getParcelableArrayListExtra<Note>("notesList") ?: ArrayList()
+
         newNoteHeader = findViewById(R.id.ann_header_acet)
         newNoteText = findViewById(R.id.ann_message_acet)
+
 
         val saveBtn = findViewById<AppCompatButton>(R.id.ann_save_acb)
 
@@ -40,7 +40,7 @@ class NewNoteActivity : AppCompatActivity() {
             val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
             val dateText = dateFormat.format(Calendar.getInstance().time)
             // Добавляем новую заметку в список
-            notesList.add(Custom.Note(headerText, messageText, dateText))
+            notesList.add(Note(headerText, messageText, dateText))
 
             // Возвращаем обновлённый список обратно в MainActivity
             val resultIntent = Intent()
@@ -49,15 +49,7 @@ class NewNoteActivity : AppCompatActivity() {
             finish()
         }
 
-        val addIconBtn = findViewById<AppCompatButton>(R.id.am_icon_acb)
-        addIconBtn.setOnClickListener {
-            notesList.add(Custom.Icon())
-            // Возвращаем обновлённый список обратно в MainActivity
-            val resultIntent = Intent()
-            resultIntent.putParcelableArrayListExtra("updatedNotesList", notesList)
-            setResult(Activity.RESULT_OK, resultIntent)
-            finish()
-        }
+
 
     }
 }
