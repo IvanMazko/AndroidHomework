@@ -1,4 +1,4 @@
-package com.example.androidhomework.ht18
+package com.example.androidhomework.presentation.view.activities.ht18
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
 import com.example.androidhomework.R
-import com.example.androidhomework.ht21.MainActivity
+import com.example.androidhomework.presentation.view.activities.MainActivity
 
 class RegistrationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

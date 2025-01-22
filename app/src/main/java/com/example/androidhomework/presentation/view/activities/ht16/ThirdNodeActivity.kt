@@ -1,4 +1,4 @@
-package com.example.androidhomework.ht16
+package com.example.androidhomework.presentation.view.activities.ht16
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
