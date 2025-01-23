@@ -10,27 +10,25 @@ import com.example.androidhomework.presentation.view.fragments.NewNoteFragment
 
 class MainFragmentViewModel:ViewModel() {
 
-    private val _userNameLiveData: MutableLiveData<String> = MutableLiveData(null)
-    val userNameLiveData: LiveData<String> = _userNameLiveData
+    data class CurrentState(
+        val userNameTextView : String = "User",
+        val notesList : ArrayList<Note?> = ArrayList(),
+        val signOutBtn : Boolean = false,
+        val addNewNoteBtn : Boolean= false,
+    )
 
-    private val _noteListLiveData: MutableLiveData<ArrayList<Note>?> = MutableLiveData()
-    val noteListLiveData:LiveData<ArrayList<Note>?> =_noteListLiveData
+    private val _liveData = MutableLiveData<CurrentState>()
+    val liveData: LiveData<CurrentState> get() = _liveData
 
-
-    fun handleAction(action: MainFragmentAction, userName: String, listOfNotes: ArrayList<Note>){
+    fun handleAction(action: MainFragmentAction, username: String, listOfNotes: ArrayList<Note?>){
         when(action){
-            MainFragmentAction.SetUserName -> setUserName(userName)
-            MainFragmentAction.SetListOfNotes -> setNoteList(listOfNotes)
+            MainFragmentAction.SetUserName -> _liveData.value = CurrentState(userNameTextView = username)
+            MainFragmentAction.SetNoteList ->_liveData.value = CurrentState(notesList = listOfNotes)
+            MainFragmentAction.ReturnToRegistration -> _liveData.value = CurrentState(signOutBtn = true)
+            MainFragmentAction.AddNewNote -> _liveData.value = CurrentState(addNewNoteBtn = true)
         }
     }
 
-    fun setUserName(userName:String){
-        _userNameLiveData.value = userName
-    }
-
-    fun setNoteList(noteList: ArrayList<Note>?){
-        _noteListLiveData.value = noteList
-    }
 
     fun toNextScreen(listOfNotes: ArrayList<Note>): NewNoteFragment {
         val newNoteFragment = NewNoteFragment()

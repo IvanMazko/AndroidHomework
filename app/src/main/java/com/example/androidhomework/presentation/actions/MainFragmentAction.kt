@@ -1,8 +1,8 @@
 package com.example.androidhomework.presentation.actions
 
 sealed class MainFragmentAction {
-//    data object ReturnToRegistration: MainFragmentAction()
-//    data object ToNewNoteScreen: MainFragmentAction()
+    data object ReturnToRegistration: MainFragmentAction()
+    data object AddNewNote: MainFragmentAction()
     data object SetUserName: MainFragmentAction()
-    data object SetListOfNotes: MainFragmentAction()
+    data object SetNoteList: MainFragmentAction()
 }

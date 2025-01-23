@@ -23,15 +23,18 @@ import com.example.androidhomework.presentation.view_model.RegistrationFragmentV
 
 class MainFragment : Fragment() {
 
-    private var viewModel: MainFragmentViewModel ?= null
+    private var viewModel: MainFragmentViewModel? = null
     private val listOfNotes: ArrayList<Note> = ArrayList()
-    private var adapter: Adapter?=null
+    private var adapter: Adapter? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(MainFragmentViewModel::class.java)
+        viewModel =
+            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
+                .create(MainFragmentViewModel::class.java)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,18 +49,15 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //initializing liveData and using Observer
-        val username = arguments?.getString("username") ?: "Default userName"  // нужно, чтобы эти 2 строки выполнялись только при переходе из фрагмента регистрации, а во всех других случаях значение бралось из вьюмодели
+        val username = arguments?.getString("username")
+            ?: "Default userName"  // нужно, чтобы эти 2 строки выполнялись только при переходе из фрагмента регистрации, а во всех других случаях значение бралось из вьюмодели
         viewModel?.handleAction(MainFragmentAction.SetUserName, username, listOfNotes) // здесь вообще listOfNotes не нужен, добавляю только чтобы соответствовать параметрам handleAction()
         val userNameTextView = view.findViewById<AppCompatTextView>(R.id.am_userName_actv)
-
-        viewModel?.userNameLiveData?.observe(this.viewLifecycleOwner){ newData ->
-            updateUserName(userNameTextView, newData)
-        }
 
 
         //usage of Adapter
         val recyclerView = view.findViewById<RecyclerView>(R.id.am_notes_rv)
-        adapter = Adapter(listOfNotes){view, position: Int ->
+        adapter = Adapter(listOfNotes) { view, position: Int ->
             showPopupMenu(view, position)
         }
         recyclerView.adapter = adapter
@@ -67,24 +67,52 @@ class MainFragment : Fragment() {
         //creating buttons
         val addNewNoteBtn = view.findViewById<AppCompatButton>(R.id.am_addNewNote_acb)
         val signOutBtn = view.findViewById<AppCompatButton>(R.id.am_signOut_btn)
-        initClickListeners(addNewNoteBtn, signOutBtn)
+        initClickListeners(addNewNoteBtn, signOutBtn, username)
 
 
         //initializing liveData and using Observer
         val updatedNotesList: ArrayList<Note>? = arguments?.getParcelableArrayList("updatedNotesList")
         viewModel?.setNoteList(updatedNotesList)
 
-        viewModel?.noteListLiveData?.observe(this.viewLifecycleOwner){newData ->
-            updateNoteList(newData)
-        }
 
+
+        observeViewModel()
     }
 
-    private fun updateUserName(userNameTextView: AppCompatTextView, username: String){
+    private fun observeViewModel() {
+        viewModel?.liveData?.observe(this.viewLifecycleOwner) {
+            when{
+                it.signOutBtn -> {
+                    toNextScreen(RegistrationFragment(),"RegistrationFragment")
+                }
+                it.addNewNoteBtn -> {
+                    toNextScreen()
+                }
+            }
+        }
+    }
+
+    private fun toNextScreen(fragment : Fragment, fragmentTag : String){
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, fragment, fragmentTag)
+
+    }
+    private fun returnToLoginScreen(){
+        parentFragmentManager.beginTransaction()
+                  .replace(R.id.fragmentContainerView, RegistrationFragment(),"RegistrationFragment")
+                  .commit()
+    }
+
+    private fun makeNewNote(){
+        parentFragmentManager.beginTransaction()
+                  .replace(R.id.fragmentContainerView, viewModel!!.toNextScreen(listOfNotes),"NewNoteFragment")
+                  .commit()
+    }
+    private fun updateUserName(userNameTextView: AppCompatTextView, username: String) {
         userNameTextView.text = username
     }
 
-    private fun updateNoteList(noteList:ArrayList<Note>?){
+    private fun updateNoteList(noteList: ArrayList<Note>?) {
         if (noteList != null) {
             listOfNotes.clear()
             listOfNotes.addAll(noteList)
@@ -93,43 +121,43 @@ class MainFragment : Fragment() {
     }
 
 
-    private fun initClickListeners(addNewNoteBtn:AppCompatButton, signOutBtn:AppCompatButton){
+    private fun initClickListeners(addNewNoteBtn: AppCompatButton, signOutBtn: AppCompatButton, username: String) {
         addNewNoteBtn.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, viewModel!!.toNextScreen(listOfNotes),"NewNoteFragment")
-                .commit()
+            viewModel?.handleAction(MainFragmentAction.AddNewNote, username, listOfNotes)
         }
         signOutBtn.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, RegistrationFragment(),"RegistrationFragment")
-                .commit()
+            viewModel?.handleAction(MainFragmentAction.AddNewNote, username, listOfNotes)
         }
     }
 
-    private fun showPopupMenu(view: View, position: Int){
+
+    private fun showPopupMenu(view: View, position: Int) {
         val popupMenu = PopupMenu(view.context, view)
         popupMenu.menuInflater.inflate(R.menu.note_options_menu, popupMenu.menu)
-        popupMenu.setOnMenuItemClickListener { menuItem : MenuItem ->
-            when(menuItem.itemId){
+        popupMenu.setOnMenuItemClickListener { menuItem: MenuItem ->
+            when (menuItem.itemId) {
                 R.id.menu_delete -> {
                     deleteNote(listOfNotes, position)
                     true
                 }
+
                 R.id.menu_share -> {
                     shareNote(listOfNotes[position])
                     true
                 }
+
                 else -> false
             }
         }
         popupMenu.show()
     }
 
-    private fun deleteNote(listOfNotes : ArrayList<Note>, position: Int){
+    private fun deleteNote(listOfNotes: ArrayList<Note>, position: Int) {
         listOfNotes.removeAt(position)
         adapter?.notifyDataSetChanged()
     }
-    private fun shareNote(note: Note){
+
+    private fun shareNote(note: Note) {
         val message = "Header: ${note.header}\nMessage: ${note.message}\nDate: ${note.date}"
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
