@@ -10,17 +10,21 @@ import com.example.androidhomework.presentation.view.fragments.MainFragment
 
 class RegistrationFragmentViewModel: ViewModel() {
 
+    data class CurrentState(
+        val loginText: Bundle = Bundle()
+    )
 
-    fun handleAction(action: RegistrationFragmentAction, login: AppCompatEditText) : MainFragment{
+    private val _liveData = MutableLiveData<CurrentState>()
+    val liveData : LiveData<CurrentState> get() = _liveData
+
+    fun handleAction(action: RegistrationFragmentAction, login: AppCompatEditText){
         when(action){
-            RegistrationFragmentAction.ToNextScreen ->  return toNextScreen(login)
+            RegistrationFragmentAction.ToNextScreen ->  toNextScreen(login)
         }
     }
-    private fun toNextScreen(login: AppCompatEditText): MainFragment {
-        val mainFragment = MainFragment()
+    private fun toNextScreen(login: AppCompatEditText) {
         val args = Bundle()
         args.putString("username", login.text.toString())
-        mainFragment.arguments = args
-        return mainFragment
+        _liveData.value = CurrentState(loginText = args)
     }
 }

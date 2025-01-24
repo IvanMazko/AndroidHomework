@@ -64,17 +64,21 @@ class NewNoteFragment:Fragment() {
             val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
             val dateText = dateFormat.format(Calendar.getInstance().time)
 
-            if (headerText.isNotEmpty() || messageText.isNotEmpty()) {
-                // Добавляем новую заметку в список
-                notesList?.add(Note(headerText, messageText, dateText))
-            }
-            else{
+
+            val updatedNoteList = viewModel?.checkData(notesList, headerText, messageText, dateText)
+            val mainFragment = MainFragment()
+
+            val checkingList = Bundle()
+            checkingList.putParcelableArrayList("check", notesList)
+
+            if (updatedNoteList == checkingList) {
                 Toast.makeText(requireContext(), "Нет содержимого для сохранения. Заметка удалена.", Toast.LENGTH_SHORT).show()
             }
+                mainFragment.arguments = updatedNoteList
 
             // Возвращаем обновлённый список обратно в MainActivity
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, viewModel!!.toNextScreen(notesList), "MainFragment")
+                .replace(R.id.fragmentContainerView, mainFragment, "MainFragment")
                 .commit()
         }
     }

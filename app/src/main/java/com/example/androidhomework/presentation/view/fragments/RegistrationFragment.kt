@@ -43,12 +43,15 @@ class RegistrationFragment : Fragment() {
             if (login.text.toString().isEmpty() || password.text.toString().isEmpty()) {
                 Toast.makeText(requireContext(), "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show()
             } else {
+                val mainFragment = MainFragment()
+                val args = Bundle()
+                args.putString("username", login.text.toString())
+                mainFragment.arguments = args
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerView, viewModel!!.handleAction(RegistrationFragmentAction.ToNextScreen, login),"MainFragment")
+                    .replace(R.id.fragmentContainerView, mainFragment,"MainFragment")
                     .commit()
             }
         }
-
-//        viewModel?.publicLiveData?.observe(this.viewLifecycleOwner) {}
+        
     }
 }

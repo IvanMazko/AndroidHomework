@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.PopupMenu
+import androidx.compose.runtime.internal.updateLiveLiteralValue
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -52,6 +53,7 @@ class MainFragment : Fragment() {
         val username = arguments?.getString("username")
             ?: "Default userName"  // нужно, чтобы эти 2 строки выполнялись только при переходе из фрагмента регистрации, а во всех других случаях значение бралось из вьюмодели
         viewModel?.handleAction(MainFragmentAction.SetUserName, username, listOfNotes) // здесь вообще listOfNotes не нужен, добавляю только чтобы соответствовать параметрам handleAction()
+
         val userNameTextView = view.findViewById<AppCompatTextView>(R.id.am_userName_actv)
 
 
@@ -72,45 +74,50 @@ class MainFragment : Fragment() {
 
         //initializing liveData and using Observer
         val updatedNotesList: ArrayList<Note>? = arguments?.getParcelableArrayList("updatedNotesList")
-        viewModel?.setNoteList(updatedNotesList)
+        viewModel?.handleAction(MainFragmentAction.SetNoteList, username, updatedNotesList)
 
 
 
-        observeViewModel()
+        observeViewModel(userNameTextView)
     }
 
-    private fun observeViewModel() {
+    private fun observeViewModel(userNameTextView: AppCompatTextView) {
         viewModel?.liveData?.observe(this.viewLifecycleOwner) {
             when{
                 it.signOutBtn -> {
                     toNextScreen(RegistrationFragment(),"RegistrationFragment")
                 }
                 it.addNewNoteBtn -> {
-                    toNextScreen()
+                    val newNoteFragment = NewNoteFragment()
+                    newNoteFragment.arguments = it.transmittableNotesList
+                    toNextScreen(newNoteFragment, "NewNoteFragment")
                 }
             }
+            updateUserName(userNameTextView, it.userNameTextView)
+            updateNoteList(it.newNotesList)
         }
+
     }
 
     private fun toNextScreen(fragment : Fragment, fragmentTag : String){
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainerView, fragment, fragmentTag)
-
+            .commit()
     }
-    private fun returnToLoginScreen(){
-        parentFragmentManager.beginTransaction()
-                  .replace(R.id.fragmentContainerView, RegistrationFragment(),"RegistrationFragment")
-                  .commit()
-    }
-
-    private fun makeNewNote(){
-        parentFragmentManager.beginTransaction()
-                  .replace(R.id.fragmentContainerView, viewModel!!.toNextScreen(listOfNotes),"NewNoteFragment")
-                  .commit()
-    }
-    private fun updateUserName(userNameTextView: AppCompatTextView, username: String) {
-        userNameTextView.text = username
-    }
+//    private fun returnToLoginScreen(){
+//        parentFragmentManager.beginTransaction()
+//                  .replace(R.id.fragmentContainerView, RegistrationFragment(),"RegistrationFragment")
+//                  .commit()
+//    }
+//
+//    private fun makeNewNote(){
+//        parentFragmentManager.beginTransaction()
+//                  .replace(R.id.fragmentContainerView, viewModel!!.toNextScreen(listOfNotes),"NewNoteFragment")
+//                  .commit()
+//    }
+      private fun updateUserName(userNameTextView: AppCompatTextView, username: String) {
+          userNameTextView.text = username
+      }
 
     private fun updateNoteList(noteList: ArrayList<Note>?) {
         if (noteList != null) {
@@ -120,15 +127,16 @@ class MainFragment : Fragment() {
         }
     }
 
-
     private fun initClickListeners(addNewNoteBtn: AppCompatButton, signOutBtn: AppCompatButton, username: String) {
         addNewNoteBtn.setOnClickListener {
             viewModel?.handleAction(MainFragmentAction.AddNewNote, username, listOfNotes)
         }
         signOutBtn.setOnClickListener {
-            viewModel?.handleAction(MainFragmentAction.AddNewNote, username, listOfNotes)
+            viewModel?.handleAction(MainFragmentAction.ReturnToRegistration, username, listOfNotes)
         }
     }
+
+
 
 
     private fun showPopupMenu(view: View, position: Int) {

@@ -8,11 +8,13 @@ import com.example.androidhomework.presentation.view.fragments.NewNoteFragment
 
 class NewNoteFragmentViewModel: ViewModel() {
 
-    fun toNextScreen(notesList: ArrayList<Note>?): MainFragment {
-        val mainFragment = MainFragment()
+    fun checkData(notesList: ArrayList<Note>?, headerText : String, messageText : String, dateText : String) : Bundle{
+        if (headerText.isNotEmpty() || messageText.isNotEmpty()) {
+            // Добавляем новую заметку в список
+            notesList?.add(Note(headerText, messageText, dateText))
+        }
         val args = Bundle()
         args.putParcelableArrayList("updatedNotesList", notesList)
-        mainFragment.arguments = args
-        return mainFragment
+        return args
     }
 }
