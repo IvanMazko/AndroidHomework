@@ -42,6 +42,8 @@ class NewNoteFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val username = arguments?.getString("username") ?: "Default userName"
+
         // Получаем переданный список заметок
         val notesList: ArrayList<Note>? = arguments?.getParcelableArrayList("notesList")
 
@@ -51,10 +53,10 @@ class NewNoteFragment:Fragment() {
 
 
         val saveBtn = view.findViewById<AppCompatButton>(R.id.ann_save_acb)
-        initClickListener(saveBtn, notesList)
+        initClickListener(saveBtn, notesList, username)
     }
 
-    private fun initClickListener(saveBtn:AppCompatButton, notesList:ArrayList<Note>?){
+    private fun initClickListener(saveBtn:AppCompatButton, notesList:ArrayList<Note>?, username: String){
         saveBtn.setOnClickListener {
 
             // Получаем текст непосредственно перед сохранением
@@ -66,15 +68,18 @@ class NewNoteFragment:Fragment() {
 
 
             val updatedNoteList = viewModel?.checkData(notesList, headerText, messageText, dateText)
-            val mainFragment = MainFragment()
 
-            val checkingList = Bundle()
-            checkingList.putParcelableArrayList("check", notesList)
 
-            if (updatedNoteList == checkingList) {
+
+            if (headerText.isEmpty() && messageText.isEmpty()) {
                 Toast.makeText(requireContext(), "Нет содержимого для сохранения. Заметка удалена.", Toast.LENGTH_SHORT).show()
             }
-                mainFragment.arguments = updatedNoteList
+
+            val mainFragment = MainFragment()
+            val args = Bundle()
+            args.putString("username", username)
+            args.putParcelableArrayList("updatedNotesList", updatedNoteList ?: ArrayList())
+            mainFragment.arguments = args
 
             // Возвращаем обновлённый список обратно в MainActivity
             parentFragmentManager.beginTransaction()
@@ -84,3 +89,5 @@ class NewNoteFragment:Fragment() {
     }
 
 }
+//            val checkingList = Bundle()
+//            checkingList.putParcelableArrayList("check", notesList)
