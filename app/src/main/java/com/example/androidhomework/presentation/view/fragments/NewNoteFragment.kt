@@ -21,7 +21,7 @@ import java.util.Locale
 
 class NewNoteFragment:Fragment() {
 
-    private val viewModel: MainFragmentViewModel? by inject()
+    private val viewModel: NewNoteFragmentViewModel? by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,4 +1,4 @@
-package com.example.androidhomework.presentation.view
+package com.example.androidhomework.presentation
 
 import android.app.Application
 import com.example.androidhomework.di.viewModelModule
