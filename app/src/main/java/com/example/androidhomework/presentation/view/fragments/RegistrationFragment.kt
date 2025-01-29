@@ -12,14 +12,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.androidhomework.R
 import com.example.androidhomework.presentation.actions.RegistrationFragmentAction
 import com.example.androidhomework.presentation.view_model.RegistrationFragmentViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegistrationFragment : Fragment() {
 
-    private var viewModel: RegistrationFragmentViewModel ?= null
+    private val viewModel: RegistrationFragmentViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(RegistrationFragmentViewModel::class.java)
+        //viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(RegistrationFragmentViewModel::class.java)
     }
     override fun onCreateView(
         inflater: LayoutInflater,

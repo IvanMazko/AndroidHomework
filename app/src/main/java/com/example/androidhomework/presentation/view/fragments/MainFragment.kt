@@ -22,18 +22,20 @@ import com.example.androidhomework.domain.model.Note
 import com.example.androidhomework.presentation.actions.MainFragmentAction
 import com.example.androidhomework.presentation.view_model.MainFragmentViewModel
 import com.example.androidhomework.presentation.view_model.RegistrationFragmentViewModel
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment() {
 
-    private var viewModel: MainFragmentViewModel? = null
+    private val viewModel: MainFragmentViewModel? by viewModel()
     private val listOfNotes: ArrayList<Note> = ArrayList()
     private var adapter: Adapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel =
-            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
-                .create(MainFragmentViewModel::class.java)
+//        viewModel =
+//            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
+//                .create(MainFragmentViewModel::class.java)
     }
 
     override fun onCreateView(

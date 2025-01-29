@@ -13,18 +13,19 @@ import com.example.androidhomework.R
 import com.example.androidhomework.domain.model.Note
 import com.example.androidhomework.presentation.view_model.MainFragmentViewModel
 import com.example.androidhomework.presentation.view_model.NewNoteFragmentViewModel
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 class NewNoteFragment:Fragment() {
 
-    private var viewModel: NewNoteFragmentViewModel ?= null
-
+    private val viewModel: MainFragmentViewModel? by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(NewNoteFragmentViewModel::class.java)
+        //viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(NewNoteFragmentViewModel::class.java)
     }
     override fun onCreateView(
         inflater: LayoutInflater,
