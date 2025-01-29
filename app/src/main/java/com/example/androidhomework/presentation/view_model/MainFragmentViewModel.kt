@@ -12,19 +12,19 @@ import com.example.androidhomework.presentation.view.fragments.NewNoteFragment
 class MainFragmentViewModel:ViewModel() {
 
     data class CurrentState(
-        val userNameTextView : String= "User",
+        val userNameTextView : String="User",
         val newNotesList : ArrayList<Note>? = ArrayList(),
         val signOutBtn : Boolean = false,
         val addNewNoteBtn : Boolean = false,
         val transmittableNotesList : Bundle = Bundle()
     )
 
-    private val _liveData = MutableLiveData<CurrentState>()
+    private val _liveData = MutableLiveData<CurrentState>(CurrentState())
     val liveData: LiveData<CurrentState> get() = _liveData
 
-    init {
-        _liveData.value = CurrentState()
-    }
+//    init {
+//        _liveData.value = CurrentState()
+//    }
 
     fun handleAction(action: MainFragmentAction) {
         when(action) {

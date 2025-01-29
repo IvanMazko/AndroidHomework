@@ -51,7 +51,7 @@ class MainFragment : Fragment() {
         //initializing liveData and using Observer
         val username = arguments?.getString("username") ?: "Default userName"  // нужно, чтобы эти 2 строки выполнялись только при переходе из фрагмента регистрации, а во всех других случаях значение бралось из вьюмодели
         viewModel?.handleAction(MainFragmentAction.SetUserName(username)) // здесь вообще listOfNotes не нужен, добавляю только чтобы соответствовать параметрам handleAction()
-
+        Log.e("!!!", this.hashCode().toString())
         val userNameTextView = view.findViewById<AppCompatTextView>(R.id.am_userName_actv)
 
 
