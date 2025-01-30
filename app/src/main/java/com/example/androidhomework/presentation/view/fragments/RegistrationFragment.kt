@@ -10,17 +10,17 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.androidhomework.R
-import com.example.androidhomework.presentation.actions.RegistrationFragmentAction
 import com.example.androidhomework.presentation.view_model.RegistrationFragmentViewModel
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegistrationFragment : Fragment() {
 
     private val viewModel: RegistrationFragmentViewModel by viewModel()
-
+    //private var viewModel: RegistrationFragmentViewModel ?= null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(RegistrationFragmentViewModel::class.java)
+       // viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(RegistrationFragmentViewModel::class.java)
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,9 +45,7 @@ class RegistrationFragment : Fragment() {
                 Toast.makeText(requireContext(), "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show()
             } else {
                 val mainFragment = MainFragment()
-                val args = Bundle()
-                args.putString("username", login.text.toString())
-                mainFragment.arguments = args
+                mainFragment.arguments = viewModel?.toNextScreen(login.text.toString())
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerView, mainFragment,"MainFragment")
                     .commit()

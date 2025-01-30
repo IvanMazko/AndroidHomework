@@ -21,7 +21,7 @@ import java.util.Locale
 
 class NewNoteFragment:Fragment() {
 
-    private val viewModel: NewNoteFragmentViewModel? by viewModel()
+    private val viewModel: NewNoteFragmentViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +68,7 @@ class NewNoteFragment:Fragment() {
             val dateText = dateFormat.format(Calendar.getInstance().time)
 
 
-            val updatedNoteList = viewModel?.checkData(notesList, headerText, messageText, dateText)
+            val updatedNoteList = viewModel.checkData(notesList, headerText, messageText, dateText)
 
 
 
@@ -79,7 +79,7 @@ class NewNoteFragment:Fragment() {
             val mainFragment = MainFragment()
             val args = Bundle()
             args.putString("username", username)
-            args.putParcelableArrayList("updatedNotesList", updatedNoteList ?: ArrayList())
+            args.putParcelableArrayList("updatedNotesList", updatedNoteList)
             mainFragment.arguments = args
 
             // Возвращаем обновлённый список обратно в MainActivity
@@ -90,5 +90,3 @@ class NewNoteFragment:Fragment() {
     }
 
 }
-//            val checkingList = Bundle()
-//            checkingList.putParcelableArrayList("check", notesList)
