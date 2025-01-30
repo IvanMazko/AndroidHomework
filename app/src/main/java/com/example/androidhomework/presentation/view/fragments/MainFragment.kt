@@ -27,7 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment() {
 
-    private val viewModel: MainFragmentViewModel? by viewModel()
+    private val viewModel: MainFragmentViewModel by viewModel()
     private val listOfNotes: ArrayList<Note> = ArrayList()
     private var adapter: Adapter? = null
 
