@@ -1,6 +1,7 @@
 package com.example.androidhomework.presentation.view.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.androidhomework.R
 import com.example.androidhomework.domain.model.Note
@@ -21,7 +23,7 @@ import java.util.Locale
 
 class NewNoteFragment:Fragment() {
 
-    private val viewModel: NewNoteFragmentViewModel by viewModel()
+    private val viewModel: NewNoteFragmentViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +83,9 @@ class NewNoteFragment:Fragment() {
             args.putString("username", username)
             args.putParcelableArrayList("updatedNotesList", updatedNoteList)
             mainFragment.arguments = args
-
+            for (fragment in parentFragmentManager.fragments) {
+                Log.d("AAA", "$fragment")
+            }
             // Возвращаем обновлённый список обратно в MainActivity
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, mainFragment, "MainFragment")

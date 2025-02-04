@@ -23,6 +23,7 @@ class MainFragmentViewModel:ViewModel() {
     val liveData: LiveData<CurrentState> get() = _liveData
 
     init {
+        Log.d("AAA", "VM Init")
         _liveData.value = CurrentState()
     }
 

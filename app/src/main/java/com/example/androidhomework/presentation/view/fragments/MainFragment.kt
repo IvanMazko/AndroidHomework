@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.compose.runtime.internal.updateLiveLiteralValue
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +28,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment() {
 
-    private val viewModel: MainFragmentViewModel by viewModel()
+    private val viewModel: MainFragmentViewModel by viewModels()
     private val listOfNotes: ArrayList<Note> = ArrayList()
     private var adapter: Adapter? = null
 

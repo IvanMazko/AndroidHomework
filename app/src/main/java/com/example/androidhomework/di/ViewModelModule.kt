@@ -7,7 +7,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val viewModelModule = module{
-   // singleOf(::RegistrationFragmentViewModel)
+    singleOf(::RegistrationFragmentViewModel)
     singleOf(::MainFragmentViewModel)
     singleOf(::NewNoteFragmentViewModel)
 }

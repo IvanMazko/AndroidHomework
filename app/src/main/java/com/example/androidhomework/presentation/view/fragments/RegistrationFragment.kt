@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.androidhomework.R
 import com.example.androidhomework.presentation.view_model.RegistrationFragmentViewModel
@@ -16,7 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegistrationFragment : Fragment() {
 
-    private val viewModel: RegistrationFragmentViewModel by viewModel()
+    private val viewModel: RegistrationFragmentViewModel by viewModels()
     //private var viewModel: RegistrationFragmentViewModel ?= null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
