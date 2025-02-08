@@ -32,13 +32,6 @@ class MainFragment : Fragment() {
     private val listOfNotes: ArrayList<Note> = ArrayList()
     private var adapter: Adapter? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-//        viewModel =
-//            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
-//                .create(MainFragmentViewModel::class.java)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,9 +44,9 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //initializing liveData and using Observer
-        val username = arguments?.getString("username") ?: "Default userName"  // нужно, чтобы эти 2 строки выполнялись только при переходе из фрагмента регистрации, а во всех других случаях значение бралось из вьюмодели
-        viewModel?.handleAction(MainFragmentAction.SetUserName(username)) // здесь вообще listOfNotes не нужен, добавляю только чтобы соответствовать параметрам handleAction()
+
+        val username = arguments?.getString("username") ?: "Default userName"
+        viewModel.handleAction(MainFragmentAction.SetUserName(username))
 
         val userNameTextView = view.findViewById<AppCompatTextView>(R.id.am_userName_actv)
 
@@ -73,35 +66,16 @@ class MainFragment : Fragment() {
         initClickListeners(addNewNoteBtn, signOutBtn, username)
 
 
-        //initializing liveData and using Observer
         val updatedNotesList: ArrayList<Note>? = arguments?.getParcelableArrayList("updatedNotesList")
-        viewModel?.handleAction(MainFragmentAction.SetNoteList(updatedNotesList))
+        viewModel.handleAction(MainFragmentAction.SetNoteList(updatedNotesList))
 
 
 
         observeViewModel(userNameTextView)
     }
 
-//    private fun observeViewModel(userNameTextView: AppCompatTextView) {
-//        viewModel?.liveData?.observe(this.viewLifecycleOwner) {
-//            when{
-//                it.signOutBtn -> {
-//                    toNextScreen(RegistrationFragment(),"RegistrationFragment")
-//                }
-//                it.addNewNoteBtn -> {
-//                    val newNoteFragment = NewNoteFragment()
-//                    newNoteFragment.arguments = it.transmittableNotesList
-//                    toNextScreen(newNoteFragment, "NewNoteFragment")
-//                }
-//            }
-//            updateUserName(userNameTextView, it.userNameTextView)
-//            updateNoteList(it.newNotesList) // somehow the newNotesList is null, despite the fact, that in toNextScreen it is not null
-//        }
-//
-//    }
-
     private fun observeViewModel(userNameTextView: AppCompatTextView) {
-        viewModel?.liveData?.observe(viewLifecycleOwner) { state ->
+        viewModel.liveData.observe(viewLifecycleOwner) { state ->
             Log.d("MainFragment", "Observed state: $state")
             state?.let {
                 if (it.signOutBtn) {
@@ -132,7 +106,6 @@ class MainFragment : Fragment() {
 
     private fun updateNoteList(noteList: ArrayList<Note>?) {
         if (noteList != null) {
-           // Log.d("MainFragment", "Received newNotesList: $noteList") // Добавьте это для проверки
             listOfNotes.clear()
             listOfNotes.addAll(noteList)
             adapter?.notifyDataSetChanged()
@@ -141,10 +114,10 @@ class MainFragment : Fragment() {
 
     private fun initClickListeners(addNewNoteBtn: AppCompatButton, signOutBtn: AppCompatButton, username: String) {
         addNewNoteBtn.setOnClickListener {
-            viewModel?.handleAction(MainFragmentAction.AddNewNote)
+            viewModel.handleAction(MainFragmentAction.AddNewNote)
         }
         signOutBtn.setOnClickListener {
-            viewModel?.handleAction(MainFragmentAction.ReturnToRegistration)
+            viewModel.handleAction(MainFragmentAction.ReturnToRegistration)
         }
     }
 
@@ -176,7 +149,7 @@ class MainFragment : Fragment() {
         listOfNotes.removeAt(position)
         Log.d("MainFragment", "Updated list after deletion: $listOfNotes")
         adapter?.notifyItemRemoved(position)  // Notify the adapter about item removal
-        viewModel?.handleAction(MainFragmentAction.SetNoteList(listOfNotes))
+        viewModel.handleAction(MainFragmentAction.SetNoteList(listOfNotes))
     }
 
     private fun shareNote(note: Note) {
@@ -190,15 +163,3 @@ class MainFragment : Fragment() {
     }
 
 }
-
-//    private fun returnToLoginScreen(){
-//        parentFragmentManager.beginTransaction()
-//                  .replace(R.id.fragmentContainerView, RegistrationFragment(),"RegistrationFragment")
-//                  .commit()
-//    }
-//
-//    private fun makeNewNote(){
-//        parentFragmentManager.beginTransaction()
-//                  .replace(R.id.fragmentContainerView, viewModel!!.toNextScreen(listOfNotes),"NewNoteFragment")
-//                  .commit()
-//    }

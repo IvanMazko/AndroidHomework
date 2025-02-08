@@ -5,16 +5,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.androidhomework.R
 import com.example.androidhomework.domain.model.Note
+import com.example.androidhomework.presentation.actions.NewNoteFragmentActions
 import com.example.androidhomework.presentation.view_model.MainFragmentViewModel
 import com.example.androidhomework.presentation.view_model.NewNoteFragmentViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
@@ -25,10 +30,6 @@ class NewNoteFragment:Fragment() {
 
     private val viewModel: NewNoteFragmentViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        //viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(NewNoteFragmentViewModel::class.java)
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,9 +39,10 @@ class NewNoteFragment:Fragment() {
         return currentView
     }
 
-    // create editTexts
+    // create editTexts and progressBar
     private var newNoteHeader: AppCompatEditText? = null
     private var newNoteText: AppCompatEditText? = null
+    private var pb: ProgressBar? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,7 +55,7 @@ class NewNoteFragment:Fragment() {
         //initialize ediTexts
         newNoteHeader = view.findViewById(R.id.ann_header_acet)
         newNoteText = view.findViewById(R.id.ann_message_acet)
-
+        pb = view.findViewById(R.id.ann_progressBar)
 
         val saveBtn = view.findViewById<AppCompatButton>(R.id.ann_save_acb)
         initClickListener(saveBtn, notesList, username)
@@ -73,9 +75,11 @@ class NewNoteFragment:Fragment() {
             val updatedNoteList = viewModel.checkData(notesList, headerText, messageText, dateText)
 
 
-
-            if (headerText.isEmpty() && messageText.isEmpty()) {
-                Toast.makeText(requireContext(), "Нет содержимого для сохранения. Заметка удалена.", Toast.LENGTH_SHORT).show()
+            if (headerText.isNotEmpty() || messageText.isNotEmpty()) {
+                viewModel.handleAction(NewNoteFragmentActions.ChangeProgressBarStatus(true))
+            }
+            else{
+                viewModel.handleAction(NewNoteFragmentActions.ChangeProgressBarStatus(false))
             }
 
             val mainFragment = MainFragment()
@@ -83,14 +87,52 @@ class NewNoteFragment:Fragment() {
             args.putString("username", username)
             args.putParcelableArrayList("updatedNotesList", updatedNoteList)
             mainFragment.arguments = args
-            for (fragment in parentFragmentManager.fragments) {
-                Log.d("AAA", "$fragment")
+
+
+            observeViewModel(mainFragment)
+        }
+    }
+
+    private fun observeViewModel(fragment : MainFragment){
+        viewModel.liveData.observe(viewLifecycleOwner) { state ->
+            state.let {
+                if (it.progressBarFlag){
+                    addNewNote(fragment)
+                }
+                else{
+                    returnToMainScreen(fragment)
+                }
             }
-            // Возвращаем обновлённый список обратно в MainActivity
+        }
+    }
+
+    private fun switchProgressBarMode(flag: Boolean){
+        if (flag){
+            pb?.visibility = View.VISIBLE
+        }
+        else{
+            pb?.visibility = View.INVISIBLE
+        }
+
+    }
+    private fun addNewNote(mainFragment : MainFragment){
+        lifecycleScope.launch {
+            switchProgressBarMode(true)
+            delay(2000)
+            switchProgressBarMode(false)
+
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, mainFragment, "MainFragment")
                 .commit()
         }
+    }
+
+    private fun returnToMainScreen(mainFragment : MainFragment){
+        Toast.makeText(requireContext(), "Нет содержимого для сохранения. Заметка удалена.", Toast.LENGTH_SHORT).show()
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainerView, mainFragment, "MainFragment")
+            .commit()
     }
 
 }

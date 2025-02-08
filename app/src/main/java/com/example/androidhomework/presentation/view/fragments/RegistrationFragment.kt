@@ -18,11 +18,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class RegistrationFragment : Fragment() {
 
     private val viewModel: RegistrationFragmentViewModel by viewModels()
-    //private var viewModel: RegistrationFragmentViewModel ?= null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-       // viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application).create(RegistrationFragmentViewModel::class.java)
-    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,7 +42,7 @@ class RegistrationFragment : Fragment() {
                 Toast.makeText(requireContext(), "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show()
             } else {
                 val mainFragment = MainFragment()
-                mainFragment.arguments = viewModel?.toNextScreen(login.text.toString())
+                mainFragment.arguments = viewModel.toNextScreen(login.text.toString())
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerView, mainFragment,"MainFragment")
                     .commit()
