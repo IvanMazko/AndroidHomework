@@ -6,8 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.androidhomework.domain.model.Note
-import com.example.androidhomework.presentation.actions.MainFragmentAction
-import com.example.androidhomework.presentation.view.fragments.NewNoteFragment
+import com.example.androidhomework.presentation.actions.MainFragmentActions
 
 class MainFragmentViewModel:ViewModel() {
 
@@ -16,7 +15,10 @@ class MainFragmentViewModel:ViewModel() {
         val newNotesList : ArrayList<Note>? = ArrayList(),
         val signOutBtn : Boolean = false,
         val addNewNoteBtn : Boolean = false,
-        val transmittableNotesList : Bundle = Bundle()
+        val transmittableNotesList : Bundle = Bundle(),
+        val getAllCharactersBtn : Boolean = false,
+        val getOneCharacterByIdBtn : Boolean = false,
+        val getOneCharacterByNameBtn : Boolean = false
     )
 
     private val _liveData = MutableLiveData<CurrentState>()
@@ -27,37 +29,42 @@ class MainFragmentViewModel:ViewModel() {
         _liveData.value = CurrentState()
     }
 
-    fun handleAction(action: MainFragmentAction) {
+    fun handleAction(action: MainFragmentActions) {
         when(action) {
-            is MainFragmentAction.SetUserName -> {
+            is MainFragmentActions.SetUserName -> {
                 Log.d("MainFragmentViewModel", "SetUserName: $action.username")
                 _liveData.value = _liveData.value?.copy(userNameTextView = action.username)
             }
-            is MainFragmentAction.SetNoteList -> {
+            is MainFragmentActions.SetNoteList -> {
                 Log.d("MainFragmentViewModel", "SetNoteList: $action.list")
                 _liveData.value = _liveData.value?.copy(newNotesList = action.list)
             }
-            MainFragmentAction.ReturnToRegistration -> {
+            MainFragmentActions.ReturnToRegistration -> {
                 Log.d("MainFragmentViewModel", "ReturnToRegistration")
                 _liveData.value = _liveData.value?.copy(signOutBtn = true)
             }
-             MainFragmentAction.AddNewNote -> {
+             MainFragmentActions.AddNewNote -> {
                 Log.d("MainFragmentViewModel", "AddNewNote")
                 toNextScreen()
+            }
+            MainFragmentActions.ShowAllCharactersInLogs -> {
+                _liveData.value = _liveData.value?.copy(getAllCharactersBtn = true, getOneCharacterByIdBtn = false, getOneCharacterByNameBtn = false)
+            }
+            MainFragmentActions.ShowCurrentCharacterByIdInLogs -> {
+                _liveData.value = _liveData.value?.copy(getOneCharacterByIdBtn = true, getAllCharactersBtn = false, getOneCharacterByNameBtn = false)
+            }
+            MainFragmentActions.ShowCurrentCharacterByNameInLogs -> {
+                _liveData.value = _liveData.value?.copy(getOneCharacterByNameBtn = true, getAllCharactersBtn = false, getOneCharacterByIdBtn = false)
             }
         }
     }
 
     private fun toNextScreen(){
         val args = Bundle()
-        args.putParcelableArrayList("notesList", _liveData.value?.newNotesList) // Передаётся старый список, а не тот, который получился после удаления заметок
+        args.putParcelableArrayList("notesList", _liveData.value?.newNotesList)
         args.putString("username", _liveData.value?.userNameTextView)
         _liveData.value = _liveData.value?.copy(transmittableNotesList = args, addNewNoteBtn = true)
     }
 
 
 }
-//    private fun updateNoteList(){
-//        _liveData.value = CurrentState()
-//    }
-//MainFragmentAction.UpdateNoteList -> updateNoteList()

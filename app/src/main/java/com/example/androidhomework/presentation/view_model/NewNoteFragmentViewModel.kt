@@ -6,8 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.androidhomework.domain.model.Note
 import com.example.androidhomework.presentation.actions.NewNoteFragmentActions
-import com.example.androidhomework.presentation.view.fragments.MainFragment
-import com.example.androidhomework.presentation.view.fragments.NewNoteFragment
 
 class NewNoteFragmentViewModel: ViewModel() {
 

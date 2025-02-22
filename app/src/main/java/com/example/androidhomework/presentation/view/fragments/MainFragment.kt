@@ -10,21 +10,20 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.PopupMenu
-import androidx.compose.runtime.internal.updateLiveLiteralValue
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidhomework.R
-import com.example.androidhomework.databinding.ActivityMainBinding
+import com.example.androidhomework.data.api.Server
+import com.example.androidhomework.data.retrofit.RetrofitImpl
 import com.example.androidhomework.presentation.view.Adapter
 import com.example.androidhomework.domain.model.Note
-import com.example.androidhomework.presentation.actions.MainFragmentAction
+import com.example.androidhomework.presentation.actions.MainFragmentActions
 import com.example.androidhomework.presentation.view_model.MainFragmentViewModel
-import com.example.androidhomework.presentation.view_model.RegistrationFragmentViewModel
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainFragment : Fragment() {
 
@@ -46,7 +45,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val username = arguments?.getString("username") ?: "Default userName"
-        viewModel.handleAction(MainFragmentAction.SetUserName(username))
+        viewModel.handleAction(MainFragmentActions.SetUserName(username))
 
         val userNameTextView = view.findViewById<AppCompatTextView>(R.id.am_userName_actv)
 
@@ -63,18 +62,21 @@ class MainFragment : Fragment() {
         //creating buttons
         val addNewNoteBtn = view.findViewById<AppCompatButton>(R.id.am_addNewNote_acb)
         val signOutBtn = view.findViewById<AppCompatButton>(R.id.am_signOut_btn)
-        initClickListeners(addNewNoteBtn, signOutBtn, username)
+        val getAllCharactersBtn = view.findViewById<AppCompatButton>(R.id.am_getAllCharacters_acb)
+        val getCurrentCharacterByIdBtn = view.findViewById<AppCompatButton>(R.id.am_getCharacterById_acb)
+        val getCurrentCharacterByNameBtn = view.findViewById<AppCompatButton>(R.id.am_getCharacterByName_acb)
+        initClickListeners(addNewNoteBtn, signOutBtn, getAllCharactersBtn, getCurrentCharacterByIdBtn, getCurrentCharacterByNameBtn)
 
 
         val updatedNotesList: ArrayList<Note>? = arguments?.getParcelableArrayList("updatedNotesList")
-        viewModel.handleAction(MainFragmentAction.SetNoteList(updatedNotesList))
+        viewModel.handleAction(MainFragmentActions.SetNoteList(updatedNotesList))
 
+        val api = RetrofitImpl.api
 
-
-        observeViewModel(userNameTextView)
+        observeViewModel(userNameTextView, api)
     }
 
-    private fun observeViewModel(userNameTextView: AppCompatTextView) {
+    private fun observeViewModel(userNameTextView: AppCompatTextView, api : Server) {
         viewModel.liveData.observe(viewLifecycleOwner) { state ->
             Log.d("MainFragment", "Observed state: $state")
             state?.let {
@@ -90,9 +92,40 @@ class MainFragment : Fragment() {
                 if (it.newNotesList != null) {
                     updateNoteList(it.newNotesList)
                 }
+                if (it.getAllCharactersBtn) {
+                    val flag = 0
+                    showCharacters(api, flag)
+                }
+                if (it.getOneCharacterByIdBtn) {
+                    val flag = 1
+                    showCharacters(api, flag)
+                }
+                if (it.getOneCharacterByNameBtn) {
+                    val flag = 2
+                    showCharacters(api, flag)
+                }
             }
         }
     }
+
+    private fun showCharacters(api : Server, flag : Int){
+        lifecycleScope.launch(Dispatchers.IO) {
+            if (flag == 0) {
+                val responseBody = api.getAllCharacters()
+                Log.e("Response", "$responseBody")
+            }
+            else if(flag == 1){
+                val responseBody = api.getCurrentCharacterById(139)
+                val character = responseBody.character
+                Log.e("Response", "$character")
+            }
+            else {
+                val responseBody = api.getCharacterByName("Mickey Mouse") // конкретно для Микки Маусса получаем массив, для другого персонажа может возвращаться один объект и тогда не сработает
+                Log.e("Response", "$responseBody")
+            }
+        }
+    }
+
 
     private fun toNextScreen(fragment : Fragment, fragmentTag : String){
         parentFragmentManager.beginTransaction()
@@ -112,12 +145,21 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun initClickListeners(addNewNoteBtn: AppCompatButton, signOutBtn: AppCompatButton, username: String) {
+    private fun initClickListeners(addNewNoteBtn: AppCompatButton, signOutBtn: AppCompatButton, getAllCharactersBtn: AppCompatButton, getCurrentCharacterByIdBtn: AppCompatButton, getCurrentCharacterByNameBtn : AppCompatButton) {
         addNewNoteBtn.setOnClickListener {
-            viewModel.handleAction(MainFragmentAction.AddNewNote)
+            viewModel.handleAction(MainFragmentActions.AddNewNote)
         }
         signOutBtn.setOnClickListener {
-            viewModel.handleAction(MainFragmentAction.ReturnToRegistration)
+            viewModel.handleAction(MainFragmentActions.ReturnToRegistration)
+        }
+        getAllCharactersBtn.setOnClickListener {
+            viewModel.handleAction(MainFragmentActions.ShowAllCharactersInLogs)
+        }
+        getCurrentCharacterByIdBtn.setOnClickListener {
+            viewModel.handleAction(MainFragmentActions.ShowCurrentCharacterByIdInLogs)
+        }
+        getCurrentCharacterByNameBtn.setOnClickListener {
+            viewModel.handleAction(MainFragmentActions.ShowCurrentCharacterByNameInLogs)
         }
     }
 
@@ -149,7 +191,7 @@ class MainFragment : Fragment() {
         listOfNotes.removeAt(position)
         Log.d("MainFragment", "Updated list after deletion: $listOfNotes")
         adapter?.notifyItemRemoved(position)  // Notify the adapter about item removal
-        viewModel.handleAction(MainFragmentAction.SetNoteList(listOfNotes))
+        viewModel.handleAction(MainFragmentActions.SetNoteList(listOfNotes))
     }
 
     private fun shareNote(note: Note) {
