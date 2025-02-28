@@ -1,86 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    tools:context=".presentation.view.activities.ht18.RegistrationActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="180dp"
         android:layout_height="180dp"
-        android:background="@drawable/baseline_perm_identity_24"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.045" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:layout_width="232dp"
-        android:layout_height="49dp"
-        android:text="Log In to YourNotes"
-        android:textSize="25dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.348"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.1"
+        android:background="@drawable/baseline_perm_identity_24"/>
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/ar_username_et"
-        android:layout_width="350dp"
-        android:layout_height="65dp"
+        android:id="@+id/login_et"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="48dp"
-        android:hint="Username"
+        android:hint="Login"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.409"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.512" />
+        app:layout_constraintVertical_bias="0.45"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/ar_password_et"
-        android:layout_width="350dp"
+        android:id="@+id/password_et"
+        android:layout_width="200dp"
         android:layout_height="60dp"
         android:layout_marginBottom="48dp"
         android:hint="Password"
         android:inputType="number"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.409"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.651" />
+        app:layout_constraintVertical_bias="0.579" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/ar_log_in_btn"
-        android:layout_width="350dp"
-        android:layout_height="60dp"
-        android:text="Log in"
-        android:textSize="20dp"
+        android:id="@+id/sign_in_btn"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Sign in"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.409"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75" />
+        app:layout_constraintVertical_bias="0.653" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Don't have an account yet?"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.745" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/ar_return_btn"
+        android:id="@+id/asi_register_btn"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_width="70dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back"
+        android:text="Register now"
         android:textAllCaps="false"
         android:textColor="@color/blue"
-        android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="10dp"
-        app:layout_constraintVertical_bias="0.87"
-        />
+        app:layout_constraintVertical_bias="0.755" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,12 +1,13 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id ("kotlin-parcelize")
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
     namespace = "com.example.androidhomework"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.androidhomework"
@@ -55,9 +56,15 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation(libs.androidx.ui.desktop)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.media3.common.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.koin.android)
+
+    implementation ("com.google.code.gson:gson:2.10.1")
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
 }

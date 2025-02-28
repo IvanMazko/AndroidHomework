@@ -1,62 +1,60 @@
 package com.example.androidhomework.presentation.view.fragments
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.ActionMenuView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.androidhomework.R
-import com.example.androidhomework.data.model.User
 import com.example.androidhomework.data.storage.UserPreferences
-import com.example.androidhomework.presentation.actions.RegistrationFragmentActions
 import com.example.androidhomework.presentation.actions.SignInFragmentActions
-import com.example.androidhomework.presentation.view_model.RegistrationFragmentViewModel
+import com.example.androidhomework.presentation.view_model.SignInFragmentViewModel
 
-class RegistrationFragment : Fragment() {
+class SignInFragment : Fragment() {
 
-    private val viewModel : RegistrationFragmentViewModel by viewModels()
+    private val viewModel: SignInFragmentViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val currentView = inflater.inflate(R.layout.activity_registration, container, false)
+
+        val currentView = inflater.inflate(R.layout.activity_sign_in, container, false)
         return currentView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val userPrefs = UserPreferences(requireContext())
 
-        // creating editTexts buttons
-        val login = view.findViewById<AppCompatEditText>(R.id.ar_username_et)
-        val password = view.findViewById<AppCompatEditText>(R.id.ar_password_et)
-        val logInBtn = view.findViewById<AppCompatButton>(R.id.ar_log_in_btn)
-        val returnToSignInScreenBtn = view.findViewById<AppCompatButton>(R.id.ar_return_btn)
-        initClickListeners(logInBtn, returnToSignInScreenBtn, login, password, userPrefs)
+        // creating editTexts and buttons
+        val login = view.findViewById<AppCompatEditText>(R.id.login_et)
+        val password = view.findViewById<AppCompatEditText>(R.id.password_et)
+        val signInBtn = view.findViewById<AppCompatButton>(R.id.sign_in_btn)
+        val registerBtn = view.findViewById<AppCompatButton>(R.id.asi_register_btn)
+        initClickListeners(signInBtn, registerBtn, login, password, userPrefs)
 
         observeViewModel()
     }
 
-
     private fun observeViewModel(){
         viewModel.liveData.observe(viewLifecycleOwner) { state ->
             state?.let {
-                if (it.toMainScreenBtn){
+                if (it.toMainScreenBtn) {
                     val mainFragment = MainFragment()
                     mainFragment.arguments = it.userName
                     toNextScreen(mainFragment, "MainFragment")
                 }
-                if (it.toSignInScreenBtn){
-                    toNextScreen(SignInFragment(), "SignInFragment")
+                if (it.toRegisterScreenBtn) {
+                    toNextScreen(RegistrationFragment(), "RegistrationFragment")
                 }
             }
         }
@@ -68,21 +66,20 @@ class RegistrationFragment : Fragment() {
             .commit()
     }
 
-    private fun initClickListeners(logInBtn : AppCompatButton, registerBtn : AppCompatButton, login : AppCompatEditText, password : AppCompatEditText, userPrefs : UserPreferences){
-        logInBtn.setOnClickListener {
+    private fun initClickListeners(signInBtn : AppCompatButton, registerBtn : AppCompatButton, login : AppCompatEditText, password : AppCompatEditText, userPrefs : UserPreferences){
+        signInBtn.setOnClickListener {
             if (login.text.toString().isEmpty() || password.text.toString().isEmpty()) {
                 Toast.makeText(requireContext(), "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show()
-            } else if (!userPrefs.isUserExists(login.text.toString())){
-                userPrefs.saveUser(User(login.text.toString(), password.text.toString()))
-                viewModel.handleAction(RegistrationFragmentActions.GoToMainScreen(login.text.toString()))
+            } else if (userPrefs.isUserValid(login.text.toString(), password.text.toString())){
+                viewModel.handleAction(SignInFragmentActions.GoToMainScreen(login.text.toString()))
             }
             else {
-                Toast.makeText(requireContext(), "The user with this login already exists. Think of a different login.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Invalid login or password!", Toast.LENGTH_SHORT).show()
             }
 
         }
         registerBtn.setOnClickListener {
-            viewModel.handleAction(RegistrationFragmentActions.GoToSignInScreen)
+            viewModel.handleAction(SignInFragmentActions.GoToRegistrationScreen)
         }
     }
 }

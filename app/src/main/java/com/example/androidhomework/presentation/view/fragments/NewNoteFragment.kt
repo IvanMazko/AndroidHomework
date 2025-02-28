@@ -13,7 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.room.Room
 import com.example.androidhomework.R
+import com.example.androidhomework.data.storage.room.MyDatabase
+import com.example.androidhomework.data.storage.room.NoteDao
 import com.example.androidhomework.domain.model.Note
 import com.example.androidhomework.presentation.actions.NewNoteFragmentActions
 import com.example.androidhomework.presentation.view_model.MainFragmentViewModel
@@ -47,10 +50,15 @@ class NewNoteFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val database = Room.databaseBuilder(requireContext(), MyDatabase::class.java, "MyDatabase").build()
+        val dao = database.noteDao()
+
         val username = arguments?.getString("username") ?: "Default userName"
 
         // Получаем переданный список заметок
-        val notesList: ArrayList<Note>? = arguments?.getParcelableArrayList("notesList")
+        //val notesList: ArrayList<Note>? = arguments?.getParcelableArrayList("notesList")
+
+        val notesList = dao.getNote()
 
         //initialize ediTexts
         newNoteHeader = view.findViewById(R.id.ann_header_acet)
@@ -58,10 +66,10 @@ class NewNoteFragment:Fragment() {
         pb = view.findViewById(R.id.ann_progressBar)
 
         val saveBtn = view.findViewById<AppCompatButton>(R.id.ann_save_acb)
-        initClickListener(saveBtn, notesList, username)
+        initClickListener(saveBtn, notesList, username, dao)
     }
 
-    private fun initClickListener(saveBtn:AppCompatButton, notesList:ArrayList<Note>?, username: String){
+    private fun initClickListener(saveBtn:AppCompatButton, notesList:List<Note>?, username: String, dao: NoteDao){
         saveBtn.setOnClickListener {
 
             // Получаем текст непосредственно перед сохранением
@@ -72,7 +80,7 @@ class NewNoteFragment:Fragment() {
             val dateText = dateFormat.format(Calendar.getInstance().time)
 
 
-            val updatedNoteList = viewModel.checkData(notesList, headerText, messageText, dateText)
+            //val updatedNoteList = viewModel.checkData(notesList, headerText, messageText, dateText, dao)
 
 
             if (headerText.isNotEmpty() || messageText.isNotEmpty()) {
@@ -85,7 +93,7 @@ class NewNoteFragment:Fragment() {
             val mainFragment = MainFragment()
             val args = Bundle()
             args.putString("username", username)
-            args.putParcelableArrayList("updatedNotesList", updatedNoteList)
+            //args.putParcelableArrayList("updatedNotesList", updatedNoteList)
             mainFragment.arguments = args
 
 

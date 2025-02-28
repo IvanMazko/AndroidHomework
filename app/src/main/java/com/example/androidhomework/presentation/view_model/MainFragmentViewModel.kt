@@ -13,7 +13,7 @@ class MainFragmentViewModel:ViewModel() {
 
     data class CurrentState(
         val userNameTextView : String= "User",
-        val newNotesList : ArrayList<Note>? = ArrayList(),
+        //val newNotesList : List<Note> = List,
         val signOutBtn : Boolean = false,
         val addNewNoteBtn : Boolean = false,
         val transmittableNotesList : Bundle = Bundle()
@@ -35,7 +35,7 @@ class MainFragmentViewModel:ViewModel() {
             }
             is MainFragmentAction.SetNoteList -> {
                 Log.d("MainFragmentViewModel", "SetNoteList: $action.list")
-                _liveData.value = _liveData.value?.copy(newNotesList = action.list)
+               // _liveData.value = _liveData.value?.copy(newNotesList = action.list)
             }
             MainFragmentAction.ReturnToRegistration -> {
                 Log.d("MainFragmentViewModel", "ReturnToRegistration")
@@ -50,7 +50,7 @@ class MainFragmentViewModel:ViewModel() {
 
     private fun toNextScreen(){
         val args = Bundle()
-        args.putParcelableArrayList("notesList", _liveData.value?.newNotesList) // Передаётся старый список, а не тот, который получился после удаления заметок
+        //args.putParcelableArrayList("notesList", _liveData.value?.newNotesList) // Передаётся старый список, а не тот, который получился после удаления заметок
         args.putString("username", _liveData.value?.userNameTextView)
         _liveData.value = _liveData.value?.copy(transmittableNotesList = args, addNewNoteBtn = true)
     }

@@ -14,7 +14,7 @@ class RegistrationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_registration)
+        setContentView(R.layout.activity_sign_in)
 
         var login: AppCompatEditText? = null
         var password: AppCompatEditText? = null
@@ -22,7 +22,7 @@ class RegistrationActivity : AppCompatActivity() {
         login = findViewById(R.id.login_et)
         password = findViewById(R.id.password_et)
 
-        val button = findViewById<Button>(R.id.sign_up_btn)
+        val button = findViewById<Button>(R.id.sign_in_btn)
 
         button.setOnClickListener {
             if (login.text.toString().isEmpty() || password.text.toString().isEmpty()) {

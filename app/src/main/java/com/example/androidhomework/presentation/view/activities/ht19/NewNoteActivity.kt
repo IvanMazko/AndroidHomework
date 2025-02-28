@@ -33,13 +33,14 @@ class NewNoteActivity : AppCompatActivity() {
         val saveBtn = findViewById<AppCompatButton>(R.id.ann_save_acb)
 
         saveBtn.setOnClickListener {
+            val id = 1
             val headerText = newNoteHeader?.text?.toString() ?: ""
             val messageText = newNoteText?.text?.toString() ?: ""
 
             val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
             val dateText = dateFormat.format(Calendar.getInstance().time)
             // Добавляем новую заметку в список
-            notesList.add(Note(headerText, messageText, dateText))
+            notesList.add(Note(id, headerText, messageText, dateText))
 
             // Возвращаем обновлённый список обратно в MainActivity
             val resultIntent = Intent()

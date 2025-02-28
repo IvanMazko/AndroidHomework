@@ -1,7 +1,6 @@
 package com.example.androidhomework.presentation.view.fragments
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +25,7 @@ class SplashFragment : Fragment() {
         lifecycleScope.launch {
             delay(3000)
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, RegistrationFragment(),"RegistrationFragment")
+                .replace(R.id.fragmentContainerView, SignInFragment(),"RegistrationFragment")
                 .commit()
         }
     }
