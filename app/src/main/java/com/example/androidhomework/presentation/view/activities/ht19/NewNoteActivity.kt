@@ -40,7 +40,7 @@ class NewNoteActivity : AppCompatActivity() {
             val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
             val dateText = dateFormat.format(Calendar.getInstance().time)
             // Добавляем новую заметку в список
-            notesList.add(Note(id, headerText, messageText, dateText))
+            notesList.add(Note(id, headerText, messageText, dateText, 1))
 
             // Возвращаем обновлённый список обратно в MainActivity
             val resultIntent = Intent()

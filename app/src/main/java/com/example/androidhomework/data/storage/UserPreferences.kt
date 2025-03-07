@@ -16,12 +16,12 @@ class UserPreferences(context: Context) {
     fun saveUser(user: User){
         val userJson = gson.toJson(user)
         sharedPrefs.edit {
-            putString(user.login, userJson).apply()
+            putString("current_user", userJson).apply()
         }
     }
 
-    fun getUserByLogin(login: String) : User?{
-        val userJson = sharedPrefs.getString(login, null)
+    fun getUser() : User?{
+        val userJson = sharedPrefs.getString("current_user", null)
         return if (userJson != null){
             gson.fromJson(userJson, User::class.java)
         } else {
@@ -29,14 +29,18 @@ class UserPreferences(context: Context) {
         }
 
     }
-    fun isUserExists(login:String) : Boolean{
-        return sharedPrefs.contains(login)
+
+    fun isUserExists() : Boolean{
+        return sharedPrefs.contains("current_user")
     }
 
-    fun isUserValid(login: String, password : String) : Boolean{
-        val user = getUserByLogin(login)
-        return user?.password == password
+
+    fun deleteUser(){
+        sharedPrefs.edit{
+            remove("current_user").apply()
+        }
     }
+
 
 
 }

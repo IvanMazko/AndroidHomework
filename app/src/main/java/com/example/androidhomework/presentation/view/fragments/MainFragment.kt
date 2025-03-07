@@ -13,20 +13,28 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.androidhomework.R
+import com.example.androidhomework.data.model.User
+import com.example.androidhomework.data.storage.UserPreferences
+import com.example.androidhomework.data.storage.room.DatabaseProvider
 import com.example.androidhomework.data.storage.room.MyDatabase
+import com.example.androidhomework.data.storage.room.NoteDao
 import com.example.androidhomework.presentation.view.Adapter
 import com.example.androidhomework.domain.model.Note
 import com.example.androidhomework.presentation.actions.MainFragmentAction
 import com.example.androidhomework.presentation.view_model.MainFragmentViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainFragment : Fragment() {
 
     private val viewModel: MainFragmentViewModel by viewModels()
-    private val listOfNotes: ArrayList<Note> = ArrayList()
+    private var listOfNotes: ArrayList<Note> = ArrayList()
     private var adapter: Adapter? = null
 
 
@@ -43,11 +51,18 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val database = Room.databaseBuilder(requireContext(), MyDatabase::class.java, "MyDatabase").build()
+        // connecting of DB and Prefs
+        val userPrefs = UserPreferences(requireContext())
+        val database = DatabaseProvider.getDatabase(requireContext())
         val dao = database.noteDao()
 
-        val username = arguments?.getString("username") ?: "Default userName"
-        viewModel.handleAction(MainFragmentAction.SetUserName(username))
+        // setting of username
+        val currentUser = userPrefs.getUser()
+        if (currentUser!=null){
+            val username = currentUser.username
+            viewModel.handleAction(MainFragmentAction.SetUserName(username))
+        }
+
 
         val userNameTextView = view.findViewById<AppCompatTextView>(R.id.am_userName_actv)
 
@@ -55,7 +70,7 @@ class MainFragment : Fragment() {
         //usage of Adapter
         val recyclerView = view.findViewById<RecyclerView>(R.id.am_notes_rv)
         adapter = Adapter(listOfNotes) { view, position: Int ->
-            showPopupMenu(view, position)
+            showPopupMenu(view, position, dao, currentUser)
         }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -67,32 +82,33 @@ class MainFragment : Fragment() {
         initClickListeners(addNewNoteBtn, signOutBtn)
 
 
-        //val updatedNotesList: ArrayList<Note>? = arguments?.getParcelableArrayList("updatedNotesList")
+        // setting of notesList
+        if (currentUser != null) {
+            lifecycleScope.launch(Dispatchers.IO) {
+                val updatedNotesList = dao.getNotesByUserId(currentUser.id)
+                withContext(Dispatchers.Main) { // Переключаемся на главный поток перед обновлением LiveData
+                    viewModel.handleAction(MainFragmentAction.SetNoteList(updatedNotesList))
+                }
+            }
+        }
 
-        val updatedNotesList = dao.getNote()
-        viewModel.handleAction(MainFragmentAction.SetNoteList(updatedNotesList))
-
-
-
-        observeViewModel(userNameTextView)
+        observeViewModel(userNameTextView, userPrefs)
     }
 
-    private fun observeViewModel(userNameTextView: AppCompatTextView) {
+    private fun observeViewModel(userNameTextView: AppCompatTextView, userPrefs : UserPreferences) {
         viewModel.liveData.observe(viewLifecycleOwner) { state ->
             Log.d("MainFragment", "Observed state: $state")
             state?.let {
                 if (it.signOutBtn) {
+                    userPrefs.deleteUser()
                     toNextScreen(SignInFragment(), "RegistrationFragment")
                 }
                 if (it.addNewNoteBtn) {
                     val newNoteFragment = NewNoteFragment()
-                    //newNoteFragment.arguments = it.transmittableNotesList
                     toNextScreen(newNoteFragment, "NewNoteFragment")
                 }
                 updateUserName(userNameTextView, it.userNameTextView)
-//                if (it.newNotesList != null) {
-//                    updateNoteList(it.newNotesList)
-//                }
+                updateNoteList(it.newNotesList)
             }
         }
     }
@@ -107,7 +123,7 @@ class MainFragment : Fragment() {
           userNameTextView.text = username
       }
 
-    private fun updateNoteList(noteList: ArrayList<Note>?) {
+    private fun updateNoteList(noteList: List<Note>?) {
         if (noteList != null) {
             listOfNotes.clear()
             listOfNotes.addAll(noteList)
@@ -127,13 +143,13 @@ class MainFragment : Fragment() {
 
 
 
-    private fun showPopupMenu(view: View, position: Int) {
+    private fun showPopupMenu(view: View, position: Int, dao: NoteDao, currentUser : User?) {
         val popupMenu = PopupMenu(view.context, view)
         popupMenu.menuInflater.inflate(R.menu.note_options_menu, popupMenu.menu)
         popupMenu.setOnMenuItemClickListener { menuItem: MenuItem ->
             when (menuItem.itemId) {
                 R.id.menu_delete -> {
-                    deleteNote(listOfNotes, position)
+                    deleteNote(listOfNotes, position, dao, currentUser)
                     true
                 }
 
@@ -148,11 +164,16 @@ class MainFragment : Fragment() {
         popupMenu.show()
     }
 
-    private fun deleteNote(listOfNotes: ArrayList<Note>, position: Int) {
-        listOfNotes.removeAt(position)
-        Log.d("MainFragment", "Updated list after deletion: $listOfNotes")
-        adapter?.notifyItemRemoved(position)  // Notify the adapter about item removal
-        viewModel.handleAction(MainFragmentAction.SetNoteList(listOfNotes))
+    private fun deleteNote(listOfNotes: ArrayList<Note>, position: Int, dao: NoteDao, currentUser: User?) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            dao.deleteNoteById(listOfNotes[position].id)
+            if (currentUser != null) {
+                val updatedNoteList = dao.getNotesByUserId(currentUser.id)
+                withContext(Dispatchers.Main){
+                    viewModel.handleAction(MainFragmentAction.SetNoteList(updatedNoteList))
+                }
+            }
+        }
     }
 
     private fun shareNote(note: Note) {

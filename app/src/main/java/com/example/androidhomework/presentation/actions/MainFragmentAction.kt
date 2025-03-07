@@ -6,5 +6,5 @@ sealed class MainFragmentAction {
     data object ReturnToRegistration: MainFragmentAction()
     data object AddNewNote : MainFragmentAction()
     data class SetUserName(val username: String) : MainFragmentAction()
-    data class SetNoteList(val list: List<Note>?) : MainFragmentAction()
+    data class SetNoteList(val list: List<Note>) : MainFragmentAction()
 }

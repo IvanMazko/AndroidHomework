@@ -15,14 +15,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
 import com.example.androidhomework.R
+import com.example.androidhomework.data.model.User
+import com.example.androidhomework.data.storage.UserPreferences
+import com.example.androidhomework.data.storage.room.DatabaseProvider
 import com.example.androidhomework.data.storage.room.MyDatabase
 import com.example.androidhomework.data.storage.room.NoteDao
+import com.example.androidhomework.data.storage.room.UserDao
 import com.example.androidhomework.domain.model.Note
+import com.example.androidhomework.presentation.actions.MainFragmentAction
 import com.example.androidhomework.presentation.actions.NewNoteFragmentActions
 import com.example.androidhomework.presentation.view_model.MainFragmentViewModel
 import com.example.androidhomework.presentation.view_model.NewNoteFragmentViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
@@ -50,15 +57,11 @@ class NewNoteFragment:Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val database = Room.databaseBuilder(requireContext(), MyDatabase::class.java, "MyDatabase").build()
-        val dao = database.noteDao()
+        val userPrefs = UserPreferences(requireContext())
+        val database = DatabaseProvider.getDatabase(requireContext())
+        val noteDao = database.noteDao()
 
-        val username = arguments?.getString("username") ?: "Default userName"
-
-        // Получаем переданный список заметок
-        //val notesList: ArrayList<Note>? = arguments?.getParcelableArrayList("notesList")
-
-        val notesList = dao.getNote()
+        val currentUser = userPrefs.getUser()
 
         //initialize ediTexts
         newNoteHeader = view.findViewById(R.id.ann_header_acet)
@@ -66,10 +69,12 @@ class NewNoteFragment:Fragment() {
         pb = view.findViewById(R.id.ann_progressBar)
 
         val saveBtn = view.findViewById<AppCompatButton>(R.id.ann_save_acb)
-        initClickListener(saveBtn, notesList, username, dao)
+        if (currentUser != null) {
+            initClickListener(saveBtn, currentUser, noteDao)
+        }
     }
 
-    private fun initClickListener(saveBtn:AppCompatButton, notesList:List<Note>?, username: String, dao: NoteDao){
+    private fun initClickListener(saveBtn:AppCompatButton, currentUser: User, noteDao : NoteDao){
         saveBtn.setOnClickListener {
 
             // Получаем текст непосредственно перед сохранением
@@ -79,36 +84,20 @@ class NewNoteFragment:Fragment() {
             val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
             val dateText = dateFormat.format(Calendar.getInstance().time)
 
+            viewModel.handleAction(NewNoteFragmentActions.SaveNote(headerText, messageText, noteDao, dateText, currentUser))
 
-            //val updatedNoteList = viewModel.checkData(notesList, headerText, messageText, dateText, dao)
-
-
-            if (headerText.isNotEmpty() || messageText.isNotEmpty()) {
-                viewModel.handleAction(NewNoteFragmentActions.ChangeProgressBarStatus(true))
-            }
-            else{
-                viewModel.handleAction(NewNoteFragmentActions.ChangeProgressBarStatus(false))
-            }
-
-            val mainFragment = MainFragment()
-            val args = Bundle()
-            args.putString("username", username)
-            //args.putParcelableArrayList("updatedNotesList", updatedNoteList)
-            mainFragment.arguments = args
-
-
-            observeViewModel(mainFragment)
+            observeViewModel()
         }
     }
 
-    private fun observeViewModel(fragment : MainFragment){
+    private fun observeViewModel(){
         viewModel.liveData.observe(viewLifecycleOwner) { state ->
             state.let {
-                if (it.progressBarFlag){
-                    addNewNote(fragment)
+                if (it.saveAndReturnBtn) {
+                    addNewNote()
                 }
-                else{
-                    returnToMainScreen(fragment)
+                if (it.justReturnBtn) {
+                    returnToMainScreen()
                 }
             }
         }
@@ -123,23 +112,23 @@ class NewNoteFragment:Fragment() {
         }
 
     }
-    private fun addNewNote(mainFragment : MainFragment){
+    private fun addNewNote(){
         lifecycleScope.launch {
             switchProgressBarMode(true)
             delay(2000)
             switchProgressBarMode(false)
 
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, mainFragment, "MainFragment")
+                .replace(R.id.fragmentContainerView, MainFragment(), "MainFragment")
                 .commit()
         }
     }
 
-    private fun returnToMainScreen(mainFragment : MainFragment){
+    private fun returnToMainScreen(){
         Toast.makeText(requireContext(), "Нет содержимого для сохранения. Заметка удалена.", Toast.LENGTH_SHORT).show()
 
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainerView, mainFragment, "MainFragment")
+            .replace(R.id.fragmentContainerView, MainFragment(), "MainFragment")
             .commit()
     }
 

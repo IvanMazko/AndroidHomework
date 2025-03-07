@@ -4,7 +4,12 @@ import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.androidhomework.data.model.User
+import com.example.androidhomework.data.storage.room.UserDao
 import com.example.androidhomework.presentation.actions.RegistrationFragmentActions
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class RegistrationFragmentViewModel : ViewModel() {
@@ -26,6 +31,7 @@ class RegistrationFragmentViewModel : ViewModel() {
         when(actions){
             is RegistrationFragmentActions.GoToSignInScreen -> _liveData.value = _liveData.value?.copy(toSignInScreenBtn = true)
             is RegistrationFragmentActions.GoToMainScreen -> toNextScreen(actions.userName)
+            is RegistrationFragmentActions.RegisterUser -> registerUser(actions.userName, actions.password, actions.dao)
         }
     }
 
@@ -33,5 +39,11 @@ class RegistrationFragmentViewModel : ViewModel() {
         val args = Bundle()
         args.putString("username", login)
         _liveData.value = _liveData.value?.copy(toMainScreenBtn = true, userName = args)
+    }
+
+    private fun registerUser(userName : String, userPassword : String, dao: UserDao){
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.insertUser(User(0, username = userName, password = userPassword))
+        }
     }
 }
