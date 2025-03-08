@@ -19,6 +19,7 @@ import com.example.androidhomework.data.storage.UserPreferences
 import com.example.androidhomework.data.storage.room.DatabaseProvider
 import com.example.androidhomework.data.storage.room.MyDatabase
 import com.example.androidhomework.data.storage.room.UserDao
+import com.example.androidhomework.databinding.ActivityRegistrationBinding
 import com.example.androidhomework.presentation.actions.RegistrationFragmentActions
 import com.example.androidhomework.presentation.actions.SignInFragmentActions
 import com.example.androidhomework.presentation.view_model.RegistrationFragmentViewModel
@@ -30,13 +31,18 @@ class RegistrationFragment : Fragment() {
 
     private val viewModel : RegistrationFragmentViewModel by viewModels()
 
+    private var _binding : ActivityRegistrationBinding ?= null
+    private val binding : ActivityRegistrationBinding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val currentView = inflater.inflate(R.layout.activity_registration, container, false)
-        return currentView
+    ): View {
+        _binding = ActivityRegistrationBinding.inflate(layoutInflater, container, false)
+        return binding.root
+//        val currentView = inflater.inflate(R.layout.activity_registration, container, false)
+//        return currentView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,11 +53,11 @@ class RegistrationFragment : Fragment() {
         val dao = database.userDao()
 
         // creating editTexts buttons
-        val login = view.findViewById<AppCompatEditText>(R.id.ar_username_et)
-        val password = view.findViewById<AppCompatEditText>(R.id.ar_password_et)
-        val logInBtn = view.findViewById<AppCompatButton>(R.id.ar_log_in_btn)
-        val returnToSignInScreenBtn = view.findViewById<AppCompatButton>(R.id.ar_return_btn)
-        initClickListeners(logInBtn, returnToSignInScreenBtn, login, password, userPrefs, dao)
+//        val login = view.findViewById<AppCompatEditText>(R.id.ar_username_et)
+//        val password = view.findViewById<AppCompatEditText>(R.id.ar_password_et)
+//        val logInBtn = view.findViewById<AppCompatButton>(R.id.ar_log_in_btn)
+//        val returnToSignInScreenBtn = view.findViewById<AppCompatButton>(R.id.ar_return_btn)
+        initClickListeners(userPrefs, dao) //logInBtn, returnToSignInScreenBtn, login, password,
 
         observeViewModel()
     }
@@ -61,9 +67,9 @@ class RegistrationFragment : Fragment() {
         viewModel.liveData.observe(viewLifecycleOwner) { state ->
             state?.let {
                 if (it.toMainScreenBtn){
-                    val mainFragment = MainFragment()
-                    mainFragment.arguments = it.userName
-                    toNextScreen(mainFragment, "MainFragment")
+//                    val mainFragment = MainFragment()
+//                    mainFragment.arguments = it.userName
+                    toNextScreen(MainFragment(), "MainFragment")
                 }
                 if (it.toSignInScreenBtn){
                     toNextScreen(SignInFragment(), "SignInFragment")
@@ -78,21 +84,21 @@ class RegistrationFragment : Fragment() {
             .commit()
     }
 
-    private fun initClickListeners(logInBtn : AppCompatButton, signInBtn : AppCompatButton, login : AppCompatEditText, password : AppCompatEditText, userPrefs : UserPreferences, dao: UserDao){
-        logInBtn.setOnClickListener {
-            if (login.text.toString().isEmpty() || password.text.toString().isEmpty()) {
+    private fun initClickListeners(userPrefs : UserPreferences, dao: UserDao){ //logInBtn : AppCompatButton, signInBtn : AppCompatButton, login : AppCompatEditText, password : AppCompatEditText,
+        _binding?.arLogInBtn?.setOnClickListener {
+            if (_binding?.arUsernameEt?.text.toString().isEmpty() || _binding?.arPasswordEt?.text.toString().isEmpty()) {
                 Toast.makeText(requireContext(), "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show()
             } else {
                 lifecycleScope.launch {
-                    if (dao.getUserByUsername(login.text.toString()) == null){
+                    if (dao.getUserByUsername(_binding?.arUsernameEt?.text.toString()) == null){
                         val job = launch(Dispatchers.IO) {
-                            viewModel.handleAction(RegistrationFragmentActions.RegisterUser(login.text.toString(), password.text.toString(), dao))
+                            viewModel.handleAction(RegistrationFragmentActions.RegisterUser(_binding?.arUsernameEt?.text.toString(),  _binding?.arPasswordEt?.text.toString(), dao))
                         }
                         job.join() // Дожидаемся завершения вставки
-                        val user = getUserFromDb(login.text.toString(), dao)
+                        val user = getUserFromDb(_binding?.arUsernameEt?.text.toString(), dao)
                         if (user != null) {
                             userPrefs.saveUser(user)
-                            viewModel.handleAction(RegistrationFragmentActions.GoToMainScreen(login.text.toString()))
+                            viewModel.handleAction(RegistrationFragmentActions.GoToMainScreen(_binding?.arUsernameEt?.text.toString(),))
                         }
                     }
                     else {
@@ -103,7 +109,7 @@ class RegistrationFragment : Fragment() {
             }
 
         }
-        signInBtn.setOnClickListener {
+        _binding?.arReturnBtn?.setOnClickListener {
             viewModel.handleAction(RegistrationFragmentActions.GoToSignInScreen)
         }
     }
@@ -112,5 +118,10 @@ class RegistrationFragment : Fragment() {
         return withContext(Dispatchers.IO) {
             dao.getUserByUsername(login) // Получаем пользователя по логину
         }
+    }
+
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 }

@@ -41,16 +41,16 @@ class MainFragmentViewModel:ViewModel() {
             }
              MainFragmentAction.AddNewNote -> {
                 Log.d("MainFragmentViewModel", "AddNewNote")
-                toNextScreen()
+                 _liveData.value = _liveData.value?.copy(addNewNoteBtn = true)
             }
         }
     }
 
-    private fun toNextScreen(){
-        val args = Bundle()
-        args.putString("username", _liveData.value?.userNameTextView)
-        _liveData.value = _liveData.value?.copy(addNewNoteBtn = true)
-    }
+//    private fun toNextScreen(){
+//        val args = Bundle()
+//        args.putString("username", _liveData.value?.userNameTextView)
+//
+//    }
 
 
 }

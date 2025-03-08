@@ -17,7 +17,6 @@ class RegistrationFragmentViewModel : ViewModel() {
     data class CurrentState(
         val toSignInScreenBtn : Boolean = false,
         val toMainScreenBtn : Boolean = false,
-        val userName : Bundle = Bundle()
     )
 
     private val _liveData = MutableLiveData<CurrentState>()
@@ -30,16 +29,16 @@ class RegistrationFragmentViewModel : ViewModel() {
     fun handleAction(actions: RegistrationFragmentActions){
         when(actions){
             is RegistrationFragmentActions.GoToSignInScreen -> _liveData.value = _liveData.value?.copy(toSignInScreenBtn = true)
-            is RegistrationFragmentActions.GoToMainScreen -> toNextScreen(actions.userName)
+            is RegistrationFragmentActions.GoToMainScreen -> _liveData.value = _liveData.value?.copy(toMainScreenBtn = true)
             is RegistrationFragmentActions.RegisterUser -> registerUser(actions.userName, actions.password, actions.dao)
         }
     }
 
-    private fun toNextScreen(login: String){
-        val args = Bundle()
-        args.putString("username", login)
-        _liveData.value = _liveData.value?.copy(toMainScreenBtn = true, userName = args)
-    }
+//    private fun toNextScreen(login: String){
+//        val args = Bundle()
+//        args.putString("username", login)
+//
+//    }
 
     private fun registerUser(userName : String, userPassword : String, dao: UserDao){
         viewModelScope.launch(Dispatchers.IO) {

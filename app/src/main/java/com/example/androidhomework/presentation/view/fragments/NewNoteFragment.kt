@@ -21,6 +21,7 @@ import com.example.androidhomework.data.storage.room.DatabaseProvider
 import com.example.androidhomework.data.storage.room.MyDatabase
 import com.example.androidhomework.data.storage.room.NoteDao
 import com.example.androidhomework.data.storage.room.UserDao
+import com.example.androidhomework.databinding.ActivityNewNoteBinding
 import com.example.androidhomework.domain.model.Note
 import com.example.androidhomework.presentation.actions.MainFragmentAction
 import com.example.androidhomework.presentation.actions.NewNoteFragmentActions
@@ -40,19 +41,24 @@ class NewNoteFragment:Fragment() {
 
     private val viewModel: NewNoteFragmentViewModel by viewModels()
 
+    private var _binding : ActivityNewNoteBinding ?= null
+    private val binding : ActivityNewNoteBinding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val currentView = inflater.inflate(R.layout.activity_new_note, container, false)
-        return currentView
+    ): View {
+        _binding = ActivityNewNoteBinding.inflate(layoutInflater, container, false)
+        return binding.root
+//        val currentView = inflater.inflate(R.layout.activity_new_note, container, false)
+//        return currentView
     }
 
     // create editTexts and progressBar
-    private var newNoteHeader: AppCompatEditText? = null
-    private var newNoteText: AppCompatEditText? = null
-    private var pb: ProgressBar? = null
+//    private var newNoteHeader: AppCompatEditText? = null
+//    private var newNoteText: AppCompatEditText? = null
+//    private var pb: ProgressBar? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,9 +70,9 @@ class NewNoteFragment:Fragment() {
         val currentUser = userPrefs.getUser()
 
         //initialize ediTexts
-        newNoteHeader = view.findViewById(R.id.ann_header_acet)
-        newNoteText = view.findViewById(R.id.ann_message_acet)
-        pb = view.findViewById(R.id.ann_progressBar)
+//        newNoteHeader = view.findViewById(R.id.ann_header_acet)
+//        newNoteText = view.findViewById(R.id.ann_message_acet)
+//        pb = view.findViewById(R.id.ann_progressBar)
 
         val saveBtn = view.findViewById<AppCompatButton>(R.id.ann_save_acb)
         if (currentUser != null) {
@@ -78,8 +84,8 @@ class NewNoteFragment:Fragment() {
         saveBtn.setOnClickListener {
 
             // Получаем текст непосредственно перед сохранением
-            val headerText = newNoteHeader?.text?.toString() ?: ""
-            val messageText = newNoteText?.text?.toString() ?: ""
+            val headerText = _binding?.annHeaderAcet?.text?.toString() ?: ""
+            val messageText = _binding?.annMessageAcet?.text?.toString() ?: ""
 
             val dateFormat = SimpleDateFormat("dd/MM", Locale.getDefault())
             val dateText = dateFormat.format(Calendar.getInstance().time)
@@ -105,10 +111,10 @@ class NewNoteFragment:Fragment() {
 
     private fun switchProgressBarMode(flag: Boolean){
         if (flag){
-            pb?.visibility = View.VISIBLE
+            _binding?.annProgressBar?.visibility = View.VISIBLE
         }
         else{
-            pb?.visibility = View.INVISIBLE
+            _binding?.annProgressBar?.visibility = View.INVISIBLE
         }
 
     }
@@ -130,6 +136,11 @@ class NewNoteFragment:Fragment() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainerView, MainFragment(), "MainFragment")
             .commit()
+    }
+
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 
 }

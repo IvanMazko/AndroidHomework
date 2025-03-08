@@ -9,17 +9,24 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.androidhomework.R
 import com.example.androidhomework.data.storage.UserPreferences
+import com.example.androidhomework.databinding.ActivitySplashBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SplashFragment : Fragment() {
+
+    private var _binding : ActivitySplashBinding ?= null
+    private val binding : ActivitySplashBinding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val currentView = inflater.inflate(R.layout.activity_splash, container, false)
-        return currentView
+    ): View {
+        _binding = ActivitySplashBinding.inflate(layoutInflater, container, false)
+        return binding.root
+//        val currentView = inflater.inflate(R.layout.activity_splash, container, false)
+//        return currentView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,5 +52,10 @@ class SplashFragment : Fragment() {
 
     private fun checkUser(userPrefs: UserPreferences): Boolean {
         return userPrefs.isUserExists()
+    }
+
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 }

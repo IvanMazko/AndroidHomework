@@ -23,6 +23,7 @@ import com.example.androidhomework.data.storage.UserPreferences
 import com.example.androidhomework.data.storage.room.DatabaseProvider
 import com.example.androidhomework.data.storage.room.MyDatabase
 import com.example.androidhomework.data.storage.room.NoteDao
+import com.example.androidhomework.databinding.ActivityMainBinding
 import com.example.androidhomework.presentation.view.Adapter
 import com.example.androidhomework.domain.model.Note
 import com.example.androidhomework.presentation.actions.MainFragmentAction
@@ -37,14 +38,18 @@ class MainFragment : Fragment() {
     private var listOfNotes: ArrayList<Note> = ArrayList()
     private var adapter: Adapter? = null
 
+    private var _binding: ActivityMainBinding ?= null
+    private val binding: ActivityMainBinding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val currentView = inflater.inflate(R.layout.activity_main, container, false)
-        return currentView
+    ): View {
+        _binding = ActivityMainBinding.inflate(layoutInflater, container, false)
+        return binding.root
+        //val currentView = inflater.inflate(R.layout.activity_main, container, false)
+        //return currentView
     }
 
 
@@ -64,22 +69,23 @@ class MainFragment : Fragment() {
         }
 
 
-        val userNameTextView = view.findViewById<AppCompatTextView>(R.id.am_userName_actv)
+        //val userNameTextView = view.findViewById<AppCompatTextView>(R.id.am_userName_actv)
 
 
         //usage of Adapter
-        val recyclerView = view.findViewById<RecyclerView>(R.id.am_notes_rv)
+        //val recyclerView = view.findViewById<RecyclerView>(R.id.am_notes_rv)
+        val recyclerView = _binding?.amNotesRv
         adapter = Adapter(listOfNotes) { view, position: Int ->
             showPopupMenu(view, position, dao, currentUser)
         }
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView?.adapter = adapter
+        recyclerView?.layoutManager = LinearLayoutManager(requireContext())
 
 
         //creating buttons
-        val addNewNoteBtn = view.findViewById<AppCompatButton>(R.id.am_addNewNote_acb)
-        val signOutBtn = view.findViewById<AppCompatButton>(R.id.am_signOut_btn)
-        initClickListeners(addNewNoteBtn, signOutBtn)
+//        val addNewNoteBtn = view.findViewById<AppCompatButton>(R.id.am_addNewNote_acb)
+//        val signOutBtn = view.findViewById<AppCompatButton>(R.id.am_signOut_btn)
+        initClickListeners()  //addNewNoteBtn, signOutBtn
 
 
         // setting of notesList
@@ -92,12 +98,11 @@ class MainFragment : Fragment() {
             }
         }
 
-        observeViewModel(userNameTextView, userPrefs)
+        observeViewModel(userPrefs) // userNameTextView,
     }
 
-    private fun observeViewModel(userNameTextView: AppCompatTextView, userPrefs : UserPreferences) {
+    private fun observeViewModel(userPrefs : UserPreferences) {  //userNameTextView: AppCompatTextView,
         viewModel.liveData.observe(viewLifecycleOwner) { state ->
-            Log.d("MainFragment", "Observed state: $state")
             state?.let {
                 if (it.signOutBtn) {
                     userPrefs.deleteUser()
@@ -107,7 +112,7 @@ class MainFragment : Fragment() {
                     val newNoteFragment = NewNoteFragment()
                     toNextScreen(newNoteFragment, "NewNoteFragment")
                 }
-                updateUserName(userNameTextView, it.userNameTextView)
+                updateUserName(it.userNameTextView) //userNameTextView,
                 updateNoteList(it.newNotesList)
             }
         }
@@ -119,8 +124,8 @@ class MainFragment : Fragment() {
             .commit()
     }
 
-      private fun updateUserName(userNameTextView: AppCompatTextView, username: String) {
-          userNameTextView.text = username
+      private fun updateUserName(username: String) {  //userNameTextView: AppCompatTextView,
+          _binding?.amUserNameActv?.text = username
       }
 
     private fun updateNoteList(noteList: List<Note>?) {
@@ -131,11 +136,11 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun initClickListeners(addNewNoteBtn: AppCompatButton, signOutBtn: AppCompatButton) {
-        addNewNoteBtn.setOnClickListener {
+    private fun initClickListeners() {  //addNewNoteBtn: AppCompatButton, signOutBtn: AppCompatButton
+        _binding?.amAddNewNoteAcb?.setOnClickListener {
             viewModel.handleAction(MainFragmentAction.AddNewNote)
         }
-        signOutBtn.setOnClickListener {
+        _binding?.amSignOutBtn?.setOnClickListener {
             viewModel.handleAction(MainFragmentAction.ReturnToRegistration)
         }
     }
@@ -184,6 +189,11 @@ class MainFragment : Fragment() {
         }
         val chosenIntent = Intent.createChooser(intent, "Share with:")
         startActivity(chosenIntent)
+    }
+
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 
 }
