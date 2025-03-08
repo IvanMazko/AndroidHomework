@@ -1,6 +1,5 @@
 package com.example.androidhomework.presentation.view_model
 
-import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,12 +32,6 @@ class RegistrationFragmentViewModel : ViewModel() {
             is RegistrationFragmentActions.RegisterUser -> registerUser(actions.userName, actions.password, actions.dao)
         }
     }
-
-//    private fun toNextScreen(login: String){
-//        val args = Bundle()
-//        args.putString("username", login)
-//
-//    }
 
     private fun registerUser(userName : String, userPassword : String, dao: UserDao){
         viewModelScope.launch(Dispatchers.IO) {

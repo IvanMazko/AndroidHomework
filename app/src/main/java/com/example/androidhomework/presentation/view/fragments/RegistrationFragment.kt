@@ -5,23 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.ActionMenuView
-import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.room.Room
 import com.example.androidhomework.R
 import com.example.androidhomework.data.model.User
 import com.example.androidhomework.data.storage.UserPreferences
 import com.example.androidhomework.data.storage.room.DatabaseProvider
-import com.example.androidhomework.data.storage.room.MyDatabase
 import com.example.androidhomework.data.storage.room.UserDao
 import com.example.androidhomework.databinding.ActivityRegistrationBinding
 import com.example.androidhomework.presentation.actions.RegistrationFragmentActions
-import com.example.androidhomework.presentation.actions.SignInFragmentActions
 import com.example.androidhomework.presentation.view_model.RegistrationFragmentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,8 +34,6 @@ class RegistrationFragment : Fragment() {
     ): View {
         _binding = ActivityRegistrationBinding.inflate(layoutInflater, container, false)
         return binding.root
-//        val currentView = inflater.inflate(R.layout.activity_registration, container, false)
-//        return currentView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,12 +43,7 @@ class RegistrationFragment : Fragment() {
         val database = DatabaseProvider.getDatabase(requireContext())
         val dao = database.userDao()
 
-        // creating editTexts buttons
-//        val login = view.findViewById<AppCompatEditText>(R.id.ar_username_et)
-//        val password = view.findViewById<AppCompatEditText>(R.id.ar_password_et)
-//        val logInBtn = view.findViewById<AppCompatButton>(R.id.ar_log_in_btn)
-//        val returnToSignInScreenBtn = view.findViewById<AppCompatButton>(R.id.ar_return_btn)
-        initClickListeners(userPrefs, dao) //logInBtn, returnToSignInScreenBtn, login, password,
+        initClickListeners(userPrefs, dao)
 
         observeViewModel()
     }
@@ -67,8 +53,6 @@ class RegistrationFragment : Fragment() {
         viewModel.liveData.observe(viewLifecycleOwner) { state ->
             state?.let {
                 if (it.toMainScreenBtn){
-//                    val mainFragment = MainFragment()
-//                    mainFragment.arguments = it.userName
                     toNextScreen(MainFragment(), "MainFragment")
                 }
                 if (it.toSignInScreenBtn){
@@ -84,7 +68,7 @@ class RegistrationFragment : Fragment() {
             .commit()
     }
 
-    private fun initClickListeners(userPrefs : UserPreferences, dao: UserDao){ //logInBtn : AppCompatButton, signInBtn : AppCompatButton, login : AppCompatEditText, password : AppCompatEditText,
+    private fun initClickListeners(userPrefs : UserPreferences, dao: UserDao){
         _binding?.arLogInBtn?.setOnClickListener {
             if (_binding?.arUsernameEt?.text.toString().isEmpty() || _binding?.arPasswordEt?.text.toString().isEmpty()) {
                 Toast.makeText(requireContext(), "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show()

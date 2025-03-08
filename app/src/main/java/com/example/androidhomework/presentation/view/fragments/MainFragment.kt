@@ -1,27 +1,20 @@
 package com.example.androidhomework.presentation.view.fragments
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.example.androidhomework.R
 import com.example.androidhomework.data.model.User
 import com.example.androidhomework.data.storage.UserPreferences
 import com.example.androidhomework.data.storage.room.DatabaseProvider
-import com.example.androidhomework.data.storage.room.MyDatabase
 import com.example.androidhomework.data.storage.room.NoteDao
 import com.example.androidhomework.databinding.ActivityMainBinding
 import com.example.androidhomework.presentation.view.Adapter
@@ -48,8 +41,6 @@ class MainFragment : Fragment() {
     ): View {
         _binding = ActivityMainBinding.inflate(layoutInflater, container, false)
         return binding.root
-        //val currentView = inflater.inflate(R.layout.activity_main, container, false)
-        //return currentView
     }
 
 
@@ -69,11 +60,7 @@ class MainFragment : Fragment() {
         }
 
 
-        //val userNameTextView = view.findViewById<AppCompatTextView>(R.id.am_userName_actv)
-
-
         //usage of Adapter
-        //val recyclerView = view.findViewById<RecyclerView>(R.id.am_notes_rv)
         val recyclerView = _binding?.amNotesRv
         adapter = Adapter(listOfNotes) { view, position: Int ->
             showPopupMenu(view, position, dao, currentUser)
@@ -82,11 +69,7 @@ class MainFragment : Fragment() {
         recyclerView?.layoutManager = LinearLayoutManager(requireContext())
 
 
-        //creating buttons
-//        val addNewNoteBtn = view.findViewById<AppCompatButton>(R.id.am_addNewNote_acb)
-//        val signOutBtn = view.findViewById<AppCompatButton>(R.id.am_signOut_btn)
-        initClickListeners()  //addNewNoteBtn, signOutBtn
-
+        initClickListeners()
 
         // setting of notesList
         if (currentUser != null) {
@@ -98,10 +81,10 @@ class MainFragment : Fragment() {
             }
         }
 
-        observeViewModel(userPrefs) // userNameTextView,
+        observeViewModel(userPrefs)
     }
 
-    private fun observeViewModel(userPrefs : UserPreferences) {  //userNameTextView: AppCompatTextView,
+    private fun observeViewModel(userPrefs : UserPreferences) {
         viewModel.liveData.observe(viewLifecycleOwner) { state ->
             state?.let {
                 if (it.signOutBtn) {
@@ -112,7 +95,7 @@ class MainFragment : Fragment() {
                     val newNoteFragment = NewNoteFragment()
                     toNextScreen(newNoteFragment, "NewNoteFragment")
                 }
-                updateUserName(it.userNameTextView) //userNameTextView,
+                updateUserName(it.userNameTextView)
                 updateNoteList(it.newNotesList)
             }
         }
@@ -124,7 +107,7 @@ class MainFragment : Fragment() {
             .commit()
     }
 
-      private fun updateUserName(username: String) {  //userNameTextView: AppCompatTextView,
+      private fun updateUserName(username: String) {
           _binding?.amUserNameActv?.text = username
       }
 
@@ -136,7 +119,7 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun initClickListeners() {  //addNewNoteBtn: AppCompatButton, signOutBtn: AppCompatButton
+    private fun initClickListeners() {
         _binding?.amAddNewNoteAcb?.setOnClickListener {
             viewModel.handleAction(MainFragmentAction.AddNewNote)
         }

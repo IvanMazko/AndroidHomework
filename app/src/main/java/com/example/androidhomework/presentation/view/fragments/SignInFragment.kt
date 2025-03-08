@@ -1,24 +1,17 @@
 package com.example.androidhomework.presentation.view.fragments
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.room.Room
 import com.example.androidhomework.R
 import com.example.androidhomework.data.model.User
 import com.example.androidhomework.data.storage.UserPreferences
 import com.example.androidhomework.data.storage.room.DatabaseProvider
-import com.example.androidhomework.data.storage.room.MyDatabase
 import com.example.androidhomework.data.storage.room.UserDao
 import com.example.androidhomework.databinding.ActivitySignInBinding
 import com.example.androidhomework.presentation.actions.SignInFragmentActions
@@ -41,8 +34,6 @@ class SignInFragment : Fragment() {
     ): View {
         _binding = ActivitySignInBinding.inflate(layoutInflater, container, false)
         return binding.root
-//        val currentView = inflater.inflate(R.layout.activity_sign_in, container, false)
-//        return currentView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,12 +43,7 @@ class SignInFragment : Fragment() {
         val dao = database.userDao()
         val userPrefs = UserPreferences(requireContext())
 
-        // creating editTexts and buttons
-//        val login = view.findViewById<AppCompatEditText>(R.id.login_et)
-//        val password = view.findViewById<AppCompatEditText>(R.id.password_et)
-//        val signInBtn = view.findViewById<AppCompatButton>(R.id.sign_in_btn)
-//        val registerBtn = view.findViewById<AppCompatButton>(R.id.asi_register_btn)
-        initClickListeners(userPrefs, dao)   //signInBtn, registerBtn, login, password,
+        initClickListeners(userPrefs, dao)
 
         observeViewModel()
     }
@@ -81,7 +67,7 @@ class SignInFragment : Fragment() {
             .commit()
     }
 
-    private fun initClickListeners(userPrefs : UserPreferences, dao: UserDao){   //signInBtn : AppCompatButton, registerBtn : AppCompatButton, login : AppCompatEditText, password : AppCompatEditText,
+    private fun initClickListeners(userPrefs : UserPreferences, dao: UserDao){
         _binding?.signInBtn?.setOnClickListener {
             if (_binding?.loginEt?.text.toString().isEmpty() || _binding?.passwordEt?.text.toString().isEmpty()) {
                 Toast.makeText(requireContext(), "You have not filled in the fields for entry!", Toast.LENGTH_SHORT).show()
@@ -100,7 +86,7 @@ class SignInFragment : Fragment() {
             }
 
         }
-        _binding?.asiRegisterBtn?.setOnClickListener {
+            _binding?.asiRegisterBtn?.setOnClickListener {
             viewModel.handleAction(SignInFragmentActions.GoToRegistrationScreen)
         }
     }

@@ -1,21 +1,15 @@
 package com.example.androidhomework.presentation.view_model
 
-import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Room
 import com.example.androidhomework.data.model.User
 import com.example.androidhomework.data.storage.room.NoteDao
-import com.example.androidhomework.data.storage.room.UserDao
 import com.example.androidhomework.domain.model.Note
 import com.example.androidhomework.presentation.actions.NewNoteFragmentActions
-import com.example.androidhomework.presentation.view.fragments.MainFragment
-import com.example.androidhomework.presentation.view.fragments.NewNoteFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class NewNoteFragmentViewModel: ViewModel() {
 
@@ -48,6 +42,5 @@ class NewNoteFragmentViewModel: ViewModel() {
             _liveData.value = _liveData.value?.copy(justReturnBtn = true)
         }
     }
-
 
 }

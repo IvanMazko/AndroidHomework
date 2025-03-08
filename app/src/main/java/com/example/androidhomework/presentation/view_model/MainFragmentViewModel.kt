@@ -1,18 +1,15 @@
 package com.example.androidhomework.presentation.view_model
 
-import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.androidhomework.domain.model.Note
 import com.example.androidhomework.presentation.actions.MainFragmentAction
-import com.example.androidhomework.presentation.view.fragments.NewNoteFragment
 
 class MainFragmentViewModel:ViewModel() {
 
     data class CurrentState(
-        val userNameTextView : String= "User",
+        val userNameTextView : String = "User",
         val newNotesList : List<Note> = emptyList(),
         val signOutBtn : Boolean = false,
         val addNewNoteBtn : Boolean = false,
@@ -27,30 +24,11 @@ class MainFragmentViewModel:ViewModel() {
 
     fun handleAction(action: MainFragmentAction) {
         when(action) {
-            is MainFragmentAction.SetUserName -> {
-                Log.d("MainFragmentViewModel", "SetUserName: $action.username")
-                _liveData.value = _liveData.value?.copy(userNameTextView = action.username)
-            }
-            is MainFragmentAction.SetNoteList -> {
-                Log.d("MainFragmentViewModel", "SetNoteList: $action.list")
-                _liveData.value = _liveData.value?.copy(newNotesList = action.list)
-            }
-            MainFragmentAction.ReturnToRegistration -> {
-                Log.d("MainFragmentViewModel", "ReturnToRegistration")
-                _liveData.value = _liveData.value?.copy(signOutBtn = true)
-            }
-             MainFragmentAction.AddNewNote -> {
-                Log.d("MainFragmentViewModel", "AddNewNote")
-                 _liveData.value = _liveData.value?.copy(addNewNoteBtn = true)
-            }
+            is MainFragmentAction.SetUserName ->  _liveData.value = _liveData.value?.copy(userNameTextView = action.username)
+            is MainFragmentAction.SetNoteList ->  _liveData.value = _liveData.value?.copy(newNotesList = action.list)
+            MainFragmentAction.ReturnToRegistration -> _liveData.value = _liveData.value?.copy(signOutBtn = true)
+             MainFragmentAction.AddNewNote -> _liveData.value = _liveData.value?.copy(addNewNoteBtn = true)
         }
     }
-
-//    private fun toNextScreen(){
-//        val args = Bundle()
-//        args.putString("username", _liveData.value?.userNameTextView)
-//
-//    }
-
 
 }

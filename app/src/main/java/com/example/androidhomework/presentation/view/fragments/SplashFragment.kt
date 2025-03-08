@@ -1,6 +1,5 @@
 package com.example.androidhomework.presentation.view.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,8 +24,6 @@ class SplashFragment : Fragment() {
     ): View {
         _binding = ActivitySplashBinding.inflate(layoutInflater, container, false)
         return binding.root
-//        val currentView = inflater.inflate(R.layout.activity_splash, container, false)
-//        return currentView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

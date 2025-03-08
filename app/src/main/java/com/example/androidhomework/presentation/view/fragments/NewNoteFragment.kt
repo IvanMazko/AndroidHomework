@@ -1,38 +1,24 @@
 package com.example.androidhomework.presentation.view.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.room.Room
 import com.example.androidhomework.R
 import com.example.androidhomework.data.model.User
 import com.example.androidhomework.data.storage.UserPreferences
 import com.example.androidhomework.data.storage.room.DatabaseProvider
-import com.example.androidhomework.data.storage.room.MyDatabase
 import com.example.androidhomework.data.storage.room.NoteDao
-import com.example.androidhomework.data.storage.room.UserDao
 import com.example.androidhomework.databinding.ActivityNewNoteBinding
-import com.example.androidhomework.domain.model.Note
-import com.example.androidhomework.presentation.actions.MainFragmentAction
 import com.example.androidhomework.presentation.actions.NewNoteFragmentActions
-import com.example.androidhomework.presentation.view_model.MainFragmentViewModel
 import com.example.androidhomework.presentation.view_model.NewNoteFragmentViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -51,14 +37,8 @@ class NewNoteFragment:Fragment() {
     ): View {
         _binding = ActivityNewNoteBinding.inflate(layoutInflater, container, false)
         return binding.root
-//        val currentView = inflater.inflate(R.layout.activity_new_note, container, false)
-//        return currentView
     }
 
-    // create editTexts and progressBar
-//    private var newNoteHeader: AppCompatEditText? = null
-//    private var newNoteText: AppCompatEditText? = null
-//    private var pb: ProgressBar? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -68,11 +48,6 @@ class NewNoteFragment:Fragment() {
         val noteDao = database.noteDao()
 
         val currentUser = userPrefs.getUser()
-
-        //initialize ediTexts
-//        newNoteHeader = view.findViewById(R.id.ann_header_acet)
-//        newNoteText = view.findViewById(R.id.ann_message_acet)
-//        pb = view.findViewById(R.id.ann_progressBar)
 
         val saveBtn = view.findViewById<AppCompatButton>(R.id.ann_save_acb)
         if (currentUser != null) {
